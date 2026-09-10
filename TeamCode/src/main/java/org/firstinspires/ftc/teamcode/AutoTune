@@ -1,0 +1,51 @@
+https://pedropathing.com/docs/pathing/tuning
+
+http://192.168.43.1:10158
+STEPS:
+
+Mecanum Setup
+ 1.select Mecanum Procedure
+ 2.Enter the HardwareMap name
+ 3.Motor Direction Identification
+ Test:
+    Select Tests Procedure and select Driving
+    Use your gamepad to drive the robot around
+
+Pinpoint Setup
+ #### pinpoint is plugged into an I2C port other than port 0 ####
+ 1.Select Pinpoint Procedure
+ 2.Enter the HardwareMap name
+ 3.Forward Direction Identification ## push forward
+ 4.Strafe Direction Identification ## push to the left
+ 5.Offsets Identification ## rotate 180 degrees
+ 6.Applying the Results in Constants
+ Test:
+    Select Tests Procedure and select Localization
+    should see robot starts at (0, 0)
+    Check that moving forward increases x and strafing left increases y
+
+Foresight Setup
+ 1.Select Foresight Procedure
+ 2.Forward Velocity Identification ## run forward for the specified distance
+ 3.Strafe Velocity Identification ## run left for the specified distance
+ 4.Forward Deceleration Identification ## run forward until it reaches the specified velocity
+ 5.Strafe Deceleration Identification ## run left until it reaches the specified velocity
+ 6.Heading Braking Identification ##  spinning back and forth
+ 7.Heading Tuner ##  spinning the robot in a direction
+ 8.Forward Braking Identification ## run forward for a specified distance
+ 9.Strafe Braking Identification ## run left for a specified distance
+ 10.Forward Translational Tuner ## run forward about 12-24 inches
+ 11.Strafe Translational Tuner ## run left about 12-24 inches
+ 12.Applying the Results in Constants
+ Test:
+    Select Tests Procedure
+    Localization Test
+    Driving Test
+    Pose Test
+    Hold Test
+    Line Test
+    Curved Test
+    Interpolation Test
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+TUNE FINISH
