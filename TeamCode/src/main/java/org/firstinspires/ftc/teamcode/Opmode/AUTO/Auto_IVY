@@ -1,0 +1,46 @@
+Command name... = Command.build()
+    .setStart(() -> {}) ## like init that need to set the value before starting
+    .setExecute(() -> {}) ## the worker that when .setStart finish it start to working
+    .setDone(() -> {}) ## check that the work is done or not if already done sent the data to .setEnd
+    .setEnd(endCondition -> {}) ## wait until .setDone sent then stop this command
+
+    #### Use or not its ok ####
+    .requiring(/* requirements */)
+    .setInterruptedBehavior(/* interrupted behavior */)
+    .setBlockedBehavior(/* blocked behavior */)
+    .setConflictBehavior(/* conflict behavior */)
+    .setPriority(/* priority */);
+
+    EX.
+    public class MyOpMode extends LinearOpMode {
+        @Override
+        public void runOpMode() {
+            ##Since the scheduler is static, we need to reset it before each OpMode
+            ##so commands don't carry over from one OpMode to the next
+            Scheduler.reset();
+            DcMotor armMotor = hardwareMap.get(DcMotor.class, "arm");
+            Servo claw = hardwareMap.get(Servo.class, "claw");
+            Command raiseArm = Command.build()
+                .setExecute(() -> armMotor.setPower(0.5))
+                .setDone(() -> armMotor.getCurrentPosition() > 1000)
+                .setEnd(endCondition -> armMotor.setPower(0))
+                .requiring(armMotor);
+            Command openClaw = instant(() -> claw.setPosition(1.0));
+
+           ## Compose: raise the arm, wait 200ms, then open the claw
+            Command Pathing = sequential(
+                follow(follower, shootPreloads),
+                Shooter.shoot(),## Call the shoot Command.
+                instant(() -> claw.open()),
+                parallel( ## Follow the path while running the intake.
+                    follow(follower, pickup),
+                    instant(() -> intake.activate())
+                )
+            );
+            waitForStart();
+            schedule(Pathing); ##send path to waitForStart
+            while (opModeIsActive()) {
+                Scheduler.execute(); ##To start the path that was plan
+            }
+        }
+    }
