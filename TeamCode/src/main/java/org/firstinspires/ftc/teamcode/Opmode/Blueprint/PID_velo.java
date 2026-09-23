@@ -6,14 +6,13 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.teamcode.Opmode.Config_Biobuzz;
+import org.firstinspires.ftc.teamcode.Opmode.Config_Tuning;
 
-@Config
 public class PID_velo {
-    double kp = Config_Biobuzz.Velo.kp;
-    double ki = Config_Biobuzz.Velo.ki ;
-    double kd = Config_Biobuzz.Velo.kd ;
-    double kf = Config_Biobuzz.Velo.kf ;// start power
+    double kp = Config_Tuning.Velo.kp;
+    double ki = Config_Tuning.Velo.ki ;
+    double kd = Config_Tuning.Velo.kd ;
+    double kf = Config_Tuning.Velo.kf ;// start power
 
     private double previous_error, error, delta_error, integral, previous_time, delta_time, power_motor;
     private DcMotorEx motor1;

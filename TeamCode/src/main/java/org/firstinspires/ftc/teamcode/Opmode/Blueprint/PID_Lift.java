@@ -4,16 +4,15 @@ import com.acmerobotics.dashboard.config.Config;
 
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.teamcode.Opmode.Config_Biobuzz;
+import org.firstinspires.ftc.teamcode.Opmode.Config_Tuning;
 
-@Config
 public class PID_Lift {
 
-    double kp = Config_Biobuzz.Lift.kp;
-    double ki = Config_Biobuzz.Lift.ki;
-    double kd = Config_Biobuzz.Lift.kd;
-    double kf = Config_Biobuzz.Lift.kf;
-    double kg = Config_Biobuzz.Lift.kg;
+    double kp = Config_Tuning.Lift.kp;
+    double ki = Config_Tuning.Lift.ki;
+    double kd = Config_Tuning.Lift.kd;
+    double kf = Config_Tuning.Lift.kf;
+    double kg = Config_Tuning.Lift.kg;
 
     private double previous_error, error, delta_error, integral, previous_time, delta_time, power_motor;
     private ElapsedTime time;

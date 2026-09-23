@@ -67,6 +67,7 @@ public class Drive extends OpMode {
         drawing.draw(packet.fieldOverlay(),follower.pose());
         packet = new TelemetryPacket(false);
         FtcDashboard.getInstance().sendTelemetryPacket(packet);
+        telemetryX.addData("test",test, TelemetryX.Target.BOTH);
         follower.update();
         telemetryX.update();
     }

@@ -7,12 +7,11 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.teamcode.Opmode.Config_Biobuzz;
+import org.firstinspires.ftc.teamcode.Opmode.Config_Tuning;
 
-@Config
 public class FSM_Turret {
 
-    double Idle_target = Config_Biobuzz.FSM_Turret.Idle_target;
+    double Idle_target = Config_Tuning.FSM_Turret.Idle_target;
 
     public enum Current_State{
         Idle_state,

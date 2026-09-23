@@ -5,21 +5,20 @@ import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.teamcode.Opmode.Config_Biobuzz;
+import org.firstinspires.ftc.teamcode.Opmode.Config_Tuning;
 
-@Config
 public class PID_Turret {
 
-    double Max_angle = Config_Biobuzz.Turret.MaxAngle;
-    double Min_angle = Config_Biobuzz.Turret.MinAngle;
-    double kd = Config_Biobuzz.Turret.kd;
-    double kd_sec = Config_Biobuzz.Turret.kdSec;
-    double kf = Config_Biobuzz.Turret.kf;
-    double kf_sec = Config_Biobuzz.Turret.kfSec;
-    double ki = Config_Biobuzz.Turret.ki;
-    double ki_sec = Config_Biobuzz.Turret.kiSec;
-    double kp = Config_Biobuzz.Turret.kp;
-    double kp_sec = Config_Biobuzz.Turret.kpSec;
+    double Max_angle = Config_Tuning.Turret.MaxAngle;
+    double Min_angle = Config_Tuning.Turret.MinAngle;
+    double kd = Config_Tuning.Turret.kd;
+    double kd_sec = Config_Tuning.Turret.kdSec;
+    double kf = Config_Tuning.Turret.kf;
+    double kf_sec = Config_Tuning.Turret.kfSec;
+    double ki = Config_Tuning.Turret.ki;
+    double ki_sec = Config_Tuning.Turret.kiSec;
+    double kp = Config_Tuning.Turret.kp;
+    double kp_sec = Config_Tuning.Turret.kpSec;
 
     private double previous_error, error, delta_error, integral, previous_time, delta_time, power_motor;
     private boolean Check_limit;

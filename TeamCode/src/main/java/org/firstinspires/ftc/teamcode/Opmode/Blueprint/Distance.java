@@ -5,17 +5,16 @@ import com.pedropathing.follower.Follower;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
-import org.firstinspires.ftc.teamcode.Opmode.Config_Biobuzz;
+import org.firstinspires.ftc.teamcode.Opmode.Config_Tuning;
 
-@Config
 public class Distance {
     ElapsedTime time;
     Follower follower;
 
     public double[] Red_Goal = {128.80923076923077 , -140.4923076923077 , 33.0}; // x,y,theta
     public double[] Blue_Goal = {123, -18 , 50.0}; // x,y,theta
-    double Max_angle = Config_Biobuzz.Turret.MaxAngle;
-    double Min_angle = Config_Biobuzz.Turret.MinAngle;
+    double Max_angle = Config_Tuning.Turret.MaxAngle;
+    double Min_angle = Config_Tuning.Turret.MinAngle;
 
     public double distance,deltaX,deltaY,Target_Theta,Theta,robot;
     public void init (ElapsedTime elapsedTime){

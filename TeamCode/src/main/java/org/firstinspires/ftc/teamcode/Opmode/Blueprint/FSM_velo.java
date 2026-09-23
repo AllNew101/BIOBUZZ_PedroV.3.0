@@ -6,10 +6,9 @@ import com.qualcomm.robotcore.hardware.DcMotorImplEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.teamcode.Opmode.Config_Biobuzz;
+import org.firstinspires.ftc.teamcode.Opmode.Config_Tuning;
 
 
-@Config
 public class FSM_velo {
     public enum Current_State{Fast, Mid,Stop}
 
@@ -18,9 +17,9 @@ public class FSM_velo {
     DcMotorEx motor1;
     ElapsedTime time;
 
-    double fast = Config_Biobuzz.FSM_Velo.fast;
-    double mid = Config_Biobuzz.FSM_Velo.mid;
-    double stop = Config_Biobuzz.FSM_Velo.stop;
+    double fast = Config_Tuning.FSM_Velo.fast;
+    double mid = Config_Tuning.FSM_Velo.mid;
+    double stop = Config_Tuning.FSM_Velo.stop;
 
     public void init (HardwareMap hardwareMap, ElapsedTime elapsedTime){
         motor1 = hardwareMap.get(DcMotorEx.class, "motor1");
