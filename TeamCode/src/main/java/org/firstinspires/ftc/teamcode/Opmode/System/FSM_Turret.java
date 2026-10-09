@@ -1,12 +1,12 @@
-package org.firstinspires.ftc.teamcode.Opmode.Blueprint;
+package org.firstinspires.ftc.teamcode.Opmode.System;
 
-import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.teamcode.Opmode.Blueprint.Distance;
 import org.firstinspires.ftc.teamcode.Opmode.Config_Tuning;
 
 public class FSM_Turret {

@@ -1,7 +1,7 @@
 package org.firstinspires.ftc.teamcode.Opmode;
 
 import com.acmerobotics.dashboard.config.Config;
-
+@Config
  public class Config_Tuning {
     @Config
     public static class Lift {
@@ -32,7 +32,7 @@ import com.acmerobotics.dashboard.config.Config;
         public static double kfSec = 0.1;
     }
     @Config
-    public static class Velo {
+    public static class Shooter {
         public static double kp = 0;
         public static double ki = 0;
         public static double kd = 0;
@@ -43,10 +43,9 @@ import com.acmerobotics.dashboard.config.Config;
         public static double Idle_target = 0;
     }
     @Config
-    public static class FSM_Velo {
-        public static double fast = 800;
+    public static class FSM_Shooter {
+        public static double far = 800;
         public static double mid = 500;
-        public static double stop = 0;
     }
 
 }
