@@ -50,6 +50,7 @@ public class  TelemetryX {
     }
     public void clear(){
         Driver_tele.clear();
+        dashboardTelemetry.clear();
     }
 }
 

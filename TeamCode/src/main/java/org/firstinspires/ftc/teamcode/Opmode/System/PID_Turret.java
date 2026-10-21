@@ -6,8 +6,8 @@ import org.firstinspires.ftc.teamcode.Opmode.Config_Tuning;
 
 public class PID_Turret {
 
-    double Max_angle = Config_Tuning.Turret.MaxAngle;
-    double Min_angle = Config_Tuning.Turret.MinAngle;
+    double Max_angle = Config_Tuning.Turret.MaxTheta;
+    double Min_angle = Config_Tuning.Turret.MinTheta;
     double kd = Config_Tuning.Turret.kd;
     double kd_sec = Config_Tuning.Turret.kdSec;
     double kf = Config_Tuning.Turret.kf;
