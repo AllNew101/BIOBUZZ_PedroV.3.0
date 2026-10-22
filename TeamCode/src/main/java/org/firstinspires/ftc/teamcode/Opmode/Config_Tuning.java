@@ -20,8 +20,8 @@ public class Config_Tuning {
     }
     @Config
     public static class Turret {
-        public static double MaxTheta = 40;
-        public static double MinTheta = -40;
+        public static double MaxTheta = 50;
+        public static double MinTheta = -50;
         public static double kp = 0.02;
         public static double ki = 0;
         public static double kd = 0;
@@ -58,7 +58,7 @@ public class Config_Tuning {
     }
     @Config
     public static class Intake {
-        public static double Intake_In = 0.8;
+        public static double Intake_In = 0.5;
         public static double Intake_Shoot = 0.5;
         public static double Intake_Out = -0.8;
     }
