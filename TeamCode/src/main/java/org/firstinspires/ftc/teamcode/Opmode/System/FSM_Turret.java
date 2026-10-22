@@ -22,6 +22,7 @@ public class FSM_Turret {
     Current_State current_state;
     PID_Turret PID;
     Distance distance;
+    double offset_manual = 0.5;
 
     public void init (HardwareMap hardwareMap, ElapsedTime elapsedTime){
         PID = new PID_Turret();
@@ -35,7 +36,6 @@ public class FSM_Turret {
         turret1.setDirection(Servo.Direction.REVERSE);
         turret2.setDirection(Servo.Direction.REVERSE);
         current_state = Current_State.M0;
-
     }
 
     public void command(Current_State state){
@@ -43,17 +43,17 @@ public class FSM_Turret {
     }
     public void check_goal (){}
 
-    public void update_state(Follower follower){ // if use pid need to have target_theta
+    public void update_state(Follower follower,double gamepad,double offset_garden,double offset_human){// if use pid need to have target_theta
         switch (current_state){
 //            case Idle_state:
 //                break;
             case Lock_red_garden:
-                turret1.setPosition(distance.Pythagoras(follower.pose().x(),follower.pose().y(),follower.pose().heading(),1,true)[2]);
-                turret2.setPosition(distance.Pythagoras(follower.pose().x(),follower.pose().y(),follower.pose().heading(),1,true)[2]);
+                turret1.setPosition(distance.Pythagoras(follower.pose().x(),follower.pose().y(),follower.pose().heading(),1,true,offset_garden,offset_human)[2]);
+                turret2.setPosition(distance.Pythagoras(follower.pose().x(),follower.pose().y(),follower.pose().heading(),1,true,offset_garden,offset_human)[2]);
                 break;
             case Lock_red_human:
-                turret1.setPosition(distance.Pythagoras(follower.pose().x(),follower.pose().y(),follower.pose().heading(),2,true)[2]);
-                turret2.setPosition(distance.Pythagoras(follower.pose().x(),follower.pose().y(),follower.pose().heading(),2,true)[2]);
+                turret1.setPosition(distance.Pythagoras(follower.pose().x(),follower.pose().y(),follower.pose().heading(),2,true,offset_garden,offset_human)[2]);
+                turret2.setPosition(distance.Pythagoras(follower.pose().x(),follower.pose().y(),follower.pose().heading(),2,true,offset_garden,offset_human)[2]);
                 break;
             case L2:
                 turret1.setPosition(0);
@@ -64,8 +64,9 @@ public class FSM_Turret {
                 turret2.setPosition(0.25);
                 break;
             case M0:
-                turret1.setPosition(0.5);
-                turret2.setPosition(0.5);
+                offset_manual += -gamepad * 0.02;
+                turret1.setPosition(offset_manual);
+                turret2.setPosition(offset_manual);
                 break;
             case R1:
                 turret1.setPosition(0.75);

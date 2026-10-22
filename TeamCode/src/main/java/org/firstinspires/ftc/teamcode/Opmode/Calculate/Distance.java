@@ -12,10 +12,10 @@ public class Distance {
     ElapsedTime time;
     Follower follower;
 
-    public static double[] Red_Goal_1 = {58 , -84 , 0}; // x,y,theta
-    public static double[] Red_Goal_2 = {60, -60 , 0}; // x,y,theta
-    public static double[] Blue_Goal_1 = {123, -18 , 0}; // x,y,theta
-    public static double[] Blue_Goal_2 = {123, -18 , 0}; // x,y,theta
+    public double[] Red_Goal_1 = {58 , -84 , 0}; // x,y,theta
+    public double[] Red_Goal_2 = {60, -60 , 0}; // x,y,theta
+    public double[] Blue_Goal_1 = {123, -18 , 0}; // x,y,theta
+    public double[] Blue_Goal_2 = {123, -18 , 0}; // x,y,theta
     double Max_theta = Config_Tuning.Turret.MaxTheta;
     double Min_theta = Config_Tuning.Turret.MinTheta;
     double Gear_ratio = 3; // 3:1
@@ -25,7 +25,7 @@ public class Distance {
     public void init (ElapsedTime elapsedTime){
         time = elapsedTime;}
 
-    public double[] Pythagoras (double X,double Y,double robot_theta,int Goal,boolean Check_red){
+    public double[] Pythagoras (double X,double Y,double robot_theta,int Goal,boolean Check_red,double offset_garden,double offset_human){
         if (Goal == 1 && Check_red) { // Red_Garden
             deltaX = Red_Goal_1[0] - X;// X_robot
             deltaY = Red_Goal_1[1] - Y;// Y_robot
@@ -48,7 +48,9 @@ public class Distance {
 
         if (Target_Theta > Max_theta){Target_Theta = Max_theta;}
         else if (Target_Theta < Min_theta) {Target_Theta = Min_theta;}
-        Target_Theta_Servo = degree_to_Servo(Target_Theta);
+        if (Y <= -72){Target_Theta_Servo = degree_to_Servo(Target_Theta - offset_garden);}
+        else {Target_Theta_Servo = degree_to_Servo(Target_Theta - offset_human);}
+
 
         double[] pythagoras = {distance,Target_Theta,Target_Theta_Servo};
         return pythagoras;

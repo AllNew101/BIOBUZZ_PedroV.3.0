@@ -47,6 +47,9 @@ public class Drive extends OpMode {
     DcMotorEx motorFL;
 
     public static int debug_key = 0;
+    public static double offset_garden = 0;
+    public static double offset_human = 0;
+
 
     boolean check_cross = true;
     boolean check_intake_in = false;
@@ -102,6 +105,7 @@ public class Drive extends OpMode {
         distance.init(time);
         telemetryX.init(telemetry);
         telemetryX.clear();
+
 
         follower = Constants.create(hardwareMap);
         follower.setPose(new Pose(72,-72,Math.toRadians(90)));
@@ -184,8 +188,7 @@ public class Drive extends OpMode {
         if (check_shoot_nectar){
             FSM_shooter_nectar.command(FSM_Shooter_nectar.Current_State.Mid);}
         else {
-            FSM_shooter_nectar.command(FSM_Shooter_nectar.Current_State.Stop);
-        }
+            FSM_shooter_nectar.command(FSM_Shooter_nectar.Current_State.Stop);}
 
         // Turret
         if (gamepad1.square && check_square){
@@ -198,28 +201,21 @@ public class Drive extends OpMode {
         else if (check_turret && follower.pose().y() >= -54){
             FSM_turret.command(FSM_Turret.Current_State.Lock_red_human);}
         else {
-            if (gamepad2.dpad_left && check_dpadL2) {
-                if (state_turret_manual > 0) {
-                    state_turret_manual -= 1;
-                } else {
-                    state_turret_manual = 0;}
-                check_dpadL2 = false;
-            } else if (!gamepad2.dpad_left) {
-                check_dpadL2 = true;}
-            if (gamepad2.dpad_right && check_dpadR2) {
-                if (state_turret_manual < 4) {
-                    state_turret_manual += 1;
-                } else {
-                    state_turret_manual = 4;}
-                check_dpadR2 = false;
-            } else if (!gamepad2.dpad_right) {
-                check_dpadR2 = true;}
-            if (state_turret_manual == 0) {FSM_turret.command(FSM_Turret.Current_State.L2);}
-            if (state_turret_manual == 1) {FSM_turret.command(FSM_Turret.Current_State.L1);}
-            if (state_turret_manual == 2) {FSM_turret.command(FSM_Turret.Current_State.M0);}
-            if (state_turret_manual == 3) {FSM_turret.command(FSM_Turret.Current_State.R1);}
-            if (state_turret_manual == 4) {FSM_turret.command(FSM_Turret.Current_State.R2);}
-        }
+            FSM_turret.command(FSM_Turret.Current_State.M0);}
+        if (gamepad2.dpad_right && check_dpadR2) {
+            if (follower.pose().y() <= -72)
+                offset_garden += 2;
+            else {offset_human += 2;}
+            check_dpadR2 = false;
+        } else if (!gamepad2.dpad_right) {
+            check_dpadR2 = true;}
+        if (gamepad2.dpad_left && check_dpadL2) {
+            if (follower.pose().y() <= -72)
+                offset_garden -= 2;
+            else {offset_human -= 2;}
+            check_dpadL2 = false;
+        } else if (!gamepad2.dpad_left) {
+            check_dpadL2 = true;}
 
         // SPEED_SHOOT
         if (gamepad2.right_bumper && check_bumperR2){
@@ -228,19 +224,19 @@ public class Drive extends OpMode {
         else if(!gamepad2.right_bumper) {
             check_bumperR2=true;}
         if (gamepad2.left_bumper&&check_bumperL2){
-            Config_Tuning.FSM_Shooter.mid_pollen -= 10;
+            Config_Tuning.FSM_Shooter.mid_nectar += 10;
             check_bumperL2 = false;}
         else if(!gamepad2.left_bumper)  {
             check_bumperL2=true;}
-        if (gamepad2.right_trigger >= 10 && check_triggerR2) {
-            Config_Tuning.FSM_Shooter.mid_nectar += 10;
+        if (gamepad2.right_trigger > 0 && check_triggerR2) {
+            Config_Tuning.FSM_Shooter.mid_pollen -= 10;
             check_triggerR2 = false;}
-        else if(gamepad2.right_trigger == 0 ) {
+        else if(gamepad2.right_trigger <= 0 ) {
             check_triggerR2=true;}
-        if (gamepad2.left_trigger >= 10 && check_triggerL2) {
+        if (gamepad2.left_trigger > 0 && check_triggerL2) {
             Config_Tuning.FSM_Shooter.mid_nectar -= 10;
             check_triggerL2 = false;}
-        else if(gamepad2.left_trigger == 0) {
+        else if(gamepad2.left_trigger <= 0) {
             check_triggerL2=true;}
 
 
@@ -250,7 +246,7 @@ public class Drive extends OpMode {
         FSM_intake.update_state();
         FSM_closer_pollen.update_state();
         FSM_closer_nectar.update_state();
-        FSM_turret.update_state(follower);
+        FSM_turret.update_state(follower,gamepad2.left_stick_x,offset_garden,offset_human);
         telemetryX.update();
             follower.update();
             drawing.draw(packet.fieldOverlay(),follower.pose());
@@ -267,16 +263,13 @@ public class Drive extends OpMode {
                 telemetryX.addData("Velocity_nectar",FSM_shooter_nectar.get_info_shooter()[0], TelemetryX.Target.BOTH);
                 telemetryX.addData("Target_Pollen",FSM_shooter_pollen.get_info_shooter()[1], TelemetryX.Target.BOTH);
                 telemetryX.addData("Target_Nectar",FSM_shooter_nectar.get_info_shooter()[1], TelemetryX.Target.BOTH);
-                telemetryX.addData("Current_State_Shooter_pollen",FSM_shooter_pollen.get_state(),TelemetryX.Target.BOTH);
-                telemetryX.addData("Current_State_Shooter_nectar",FSM_shooter_pollen.get_state(),TelemetryX.Target.BOTH);
-                telemetryX.addData("Current_State_Intake",FSM_intake.get_state(),TelemetryX.Target.BOTH);
-                telemetryX.addData("Current_State_Closer_pollen",FSM_closer_pollen.get_state(),TelemetryX.Target.BOTH);
-                telemetryX.addData("Current_State_Closer_nectar",FSM_closer_nectar.get_state(),TelemetryX.Target.BOTH);
-                telemetryX.addData("test_theta_servo",(distance.Pythagoras(follower.pose().x(),follower.pose().y(),follower.pose().heading(),2,true)[2]) ,TelemetryX.Target.BOTH);
-                telemetryX.addData("test_theta_target",(distance.Pythagoras(follower.pose().x(),follower.pose().y(),follower.pose().heading(),2,true)[1]),TelemetryX.Target.BOTH);
+                telemetryX.addData("Current_State_Closer",FSM_closer_pollen.get_state(),TelemetryX.Target.BOTH);
+                telemetryX.addData("theta_target",(distance.Pythagoras(follower.pose().x(),follower.pose().y(),follower.pose().heading(),2,true,offset_garden,offset_human)[1]),TelemetryX.Target.BOTH);
                 telemetryX.addData("X",follower.pose().x(),TelemetryX.Target.BOTH);
                 telemetryX.addData("Y",follower.pose().y(),TelemetryX.Target.BOTH);
                 telemetryX.addData("theta_robot",Math.toDegrees(follower.pose().heading()),TelemetryX.Target.BOTH);
+                telemetryX.addData("offset_human",offset_human,TelemetryX.Target.BOTH);
+                telemetryX.addData("offset_garden",offset_garden,TelemetryX.Target.BOTH);
 
 
         }
@@ -294,3 +287,25 @@ public class Drive extends OpMode {
 //        FtcDashboard.getInstance().sendTelemetryPacket(packet);
 //        follower.update();
 //        telemetryX.update();
+
+//            if (gamepad2.dpad_left && check_dpadL2) {
+//                if (state_turret_manual > 0) {
+//                    state_turret_manual -= 1;
+//                } else {
+//                    state_turret_manual = 0;}
+//                check_dpadL2 = false;
+//            } else if (!gamepad2.dpad_left) {
+//                check_dpadL2 = true;}
+//            if (gamepad2.dpad_right && check_dpadR2) {
+//                if (state_turret_manual < 4) {
+//                    state_turret_manual += 1;
+//                } else {
+//                    state_turret_manual = 4;}
+//                check_dpadR2 = false;
+//            } else if (!gamepad2.dpad_right) {
+//                check_dpadR2 = true;}
+//            if (state_turret_manual == 0) {FSM_turret.command(FSM_Turret.Current_State.L2);}
+//            if (state_turret_manual == 1) {FSM_turret.command(FSM_Turret.Current_State.L1);}
+//            if (state_turret_manual == 2) {FSM_turret.command(FSM_Turret.Current_State.M0);}
+//            if (state_turret_manual == 3) {FSM_turret.command(FSM_Turret.Current_State.R1);}
+//            if (state_turret_manual == 4) {FSM_turret.command(FSM_Turret.Current_State.R2);}

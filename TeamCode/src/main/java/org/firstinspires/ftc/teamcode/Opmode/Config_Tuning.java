@@ -53,7 +53,7 @@ public class Config_Tuning {
     public static class FSM_Shooter {
         public static double far = 800;
         public static double mid_pollen = 1140;
-        public static double mid_nectar = 1120;
+        public static double mid_nectar = 1160;
         public static double power = 0.5;
     }
     @Config
