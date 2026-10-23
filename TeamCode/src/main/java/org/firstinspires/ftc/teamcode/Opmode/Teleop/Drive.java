@@ -45,6 +45,10 @@ public class Drive extends OpMode {
     DcMotorEx motorRL;
     DcMotorEx motorFR;
     DcMotorEx motorFL;
+    Servo flower1;
+    Servo flower2;
+
+
 
     public static int debug_key = 0;
     public static double offset_garden = 0;
@@ -70,6 +74,8 @@ public class Drive extends OpMode {
     boolean check_bumperL2 = true;
     boolean check_triggerR2 = true;
     boolean check_triggerL2 = true;
+    boolean check_DpadDOWN = true;
+    boolean check_flower = false;
 
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -93,6 +99,9 @@ public class Drive extends OpMode {
         motorFL = hardwareMap.get(DcMotorEx.class, "Front_L");
         motorRL.setDirection(DcMotorSimple.Direction.REVERSE);
         motorFL.setDirection(DcMotorSimple.Direction.REVERSE);
+        flower1 = hardwareMap.get(Servo.class, "Flower1");
+        flower2 = hardwareMap.get(Servo.class,"Flower2");
+        flower2.setDirection(Servo.Direction.REVERSE);
 
         time.reset();
         time.startTime();
@@ -108,7 +117,7 @@ public class Drive extends OpMode {
 
 
         follower = Constants.create(hardwareMap);
-        follower.setPose(new Pose(72,-72,Math.toRadians(90)));
+        follower.setPose(new Pose(57,-135,Math.toRadians(90)));
         follower.update();
     }
     ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -239,6 +248,19 @@ public class Drive extends OpMode {
         else if(gamepad2.left_trigger <= 0) {
             check_triggerL2=true;}
 
+        //Flower
+        if (gamepad2.dpadDownWasPressed() && check_DpadDOWN) {
+            check_DpadDOWN = false;
+            check_flower = !check_flower;}
+        else if (!gamepad2.dpadDownWasPressed()) {
+            check_DpadDOWN = true;}
+        if (check_flower){
+            flower1.setPosition(0.67);
+            flower2.setPosition(0.67);
+        } else {
+            flower1.setPosition(0);
+            flower2.setPosition(0);
+        }
 
         debugging();
         FSM_shooter_pollen.update_state();
