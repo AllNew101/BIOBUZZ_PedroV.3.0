@@ -59,6 +59,7 @@ public class Drive extends OpMode {
     boolean check_intake_in = false;
     boolean check_circle = true;
     boolean check_intake_out = false;
+    boolean check_intake_shoot = false;
     boolean check_triggerR = true;
     boolean check_closer_pollen = false;
     boolean check_bumperR = true;
@@ -124,9 +125,7 @@ public class Drive extends OpMode {
     @Override
     public void start() {
         FSM_shooter_pollen.command(FSM_Shooter_pollen.Current_State.Stop);
-        FSM_shooter_nectar.command(FSM_Shooter_nectar.Current_State.Stop);
-        FSM_intake.command(FSM_Intake.Current_State.Stop);
-    }
+        FSM_shooter_nectar.command(FSM_Shooter_nectar.Current_State.Stop);}
     @Override
     public void loop() {
 
@@ -140,29 +139,8 @@ public class Drive extends OpMode {
 //        double turn = -gamepad1.right_stick_x;
 //        follower.manual(forward, lateral, turn);
 
-        // INTAKE
-        // IN
-        if (gamepad1.crossWasPressed() && check_cross) {
-            check_intake_in = !check_intake_in;
-            check_cross = false;
-        } else if (!gamepad1.crossWasPressed()) {
-            check_cross = true;}
-        if (check_intake_in) {
-            FSM_intake.command(FSM_Intake.Current_State.In);}
-        // OUT
-        if (gamepad1.circleWasPressed() && check_circle) {
-            check_intake_out = !check_intake_out;
-            check_circle = false;
-        } else if (!gamepad1.circleWasPressed()) {
-            check_circle = true;}
-        if (check_intake_out) {
-            FSM_intake.command(FSM_Intake.Current_State.Out);}
-        // STOP
-        if (!check_intake_in && !check_intake_out){
-            FSM_intake.command(FSM_Intake.Current_State.Stop);}
-
         // CLOSER
-        // POLLEN
+            // POLLEN/NECTAR
         if (gamepad1.right_trigger > 0 && check_triggerR) {
             check_closer_pollen = !check_closer_pollen;
             check_triggerR = false;
@@ -171,10 +149,31 @@ public class Drive extends OpMode {
         if (check_closer_pollen){
             FSM_closer_pollen.command(FSM_Closer_pollen.Current_State.Open);
             FSM_closer_nectar.command(FSM_Closer_nectar.Current_State.Open);
-//            FSM_intake.command(FSM_Intake.Current_State.shoot);
+            FSM_intake.command(FSM_Intake.Current_State.shoot); // Intake
+            check_intake_shoot = true;
         }else {
             FSM_closer_pollen.command(FSM_Closer_pollen.Current_State.Close);
-            FSM_closer_nectar.command(FSM_Closer_nectar.Current_State.Close);}
+            FSM_closer_nectar.command(FSM_Closer_nectar.Current_State.Close);
+            check_intake_shoot = false;}
+
+        // INTAKE
+        // IN
+        if (gamepad1.crossWasPressed() && check_cross) {
+            check_intake_in = !check_intake_in;
+            check_cross = false;
+        } else if (!gamepad1.crossWasPressed()) {
+            check_cross = true;}
+        // OUT
+        if (gamepad1.circleWasPressed() && check_circle) {
+            check_intake_out = !check_intake_out;
+            check_circle = false;
+        } else if (!gamepad1.circleWasPressed()) {
+            check_circle = true;}
+        // FUNCTION
+        if (check_intake_shoot){FSM_intake.command(FSM_Intake.Current_State.shoot);}
+        else if (check_intake_out){FSM_intake.command(FSM_Intake.Current_State.Out);}
+        else if (check_intake_in){FSM_intake.command(FSM_Intake.Current_State.In);}
+        else {FSM_intake.command(FSM_Intake.Current_State.Stop);}
 
         // PID_SHOOTER
         // POLLEN
@@ -255,11 +254,11 @@ public class Drive extends OpMode {
         else if (!gamepad2.dpadDownWasPressed()) {
             check_DpadDOWN = true;}
         if (check_flower){
-            flower1.setPosition(0.67);
-            flower2.setPosition(0.67);
+            flower1.setPosition(1);
+            flower2.setPosition(1);
         } else {
-            flower1.setPosition(0);
-            flower2.setPosition(0);
+            flower1.setPosition(0.25);
+            flower2.setPosition(0.25);
         }
 
         debugging();

@@ -36,7 +36,7 @@ public class Config_Tuning {
         public static double kd = 1e-8;
         public static double kf = 0.5;
         public static double ki = 0;
-        public static double kp = 0.005;
+        public static double kp = 0.015;
     }
     @Config
     public static class Shooter_Nectar { // Color_ball
@@ -53,7 +53,7 @@ public class Config_Tuning {
     public static class FSM_Shooter {
         public static double far = 800;
         public static double mid_pollen = 1140;
-        public static double mid_nectar = 1160;
+        public static double mid_nectar = 1210;
         public static double power = 0.5;
     }
     @Config
