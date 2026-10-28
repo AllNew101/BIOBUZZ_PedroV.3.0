@@ -45,8 +45,8 @@ public class Drive extends OpMode {
     DcMotorEx motorRL;
     DcMotorEx motorFR;
     DcMotorEx motorFL;
-    Servo flower1;
     Servo flower2;
+    Servo RGB;
 
 
 
@@ -100,9 +100,9 @@ public class Drive extends OpMode {
         motorFL = hardwareMap.get(DcMotorEx.class, "Front_L");
         motorRL.setDirection(DcMotorSimple.Direction.REVERSE);
         motorFL.setDirection(DcMotorSimple.Direction.REVERSE);
-        flower1 = hardwareMap.get(Servo.class, "Flower1");
         flower2 = hardwareMap.get(Servo.class,"Flower2");
         flower2.setDirection(Servo.Direction.REVERSE);
+        RGB = hardwareMap.get(Servo.class,"RGB");
 
         time.reset();
         time.startTime();
@@ -149,11 +149,13 @@ public class Drive extends OpMode {
         if (check_closer_pollen){
             FSM_closer_pollen.command(FSM_Closer_pollen.Current_State.Open);
             FSM_closer_nectar.command(FSM_Closer_nectar.Current_State.Open);
-            FSM_intake.command(FSM_Intake.Current_State.shoot); // Intake
+            FSM_intake.command(FSM_Intake.Current_State.shoot);// Intake
+            RGB.setPosition(0.5);
             check_intake_shoot = true;
         }else {
             FSM_closer_pollen.command(FSM_Closer_pollen.Current_State.Close);
             FSM_closer_nectar.command(FSM_Closer_nectar.Current_State.Close);
+            RGB.setPosition(0.277);
             check_intake_shoot = false;}
 
         // INTAKE
@@ -170,8 +172,8 @@ public class Drive extends OpMode {
         } else if (!gamepad1.circleWasPressed()) {
             check_circle = true;}
         // FUNCTION
-        if (check_intake_shoot){FSM_intake.command(FSM_Intake.Current_State.shoot);}
-        else if (check_intake_out){FSM_intake.command(FSM_Intake.Current_State.Out);}
+        if (check_intake_out){FSM_intake.command(FSM_Intake.Current_State.Out);}
+        else if (check_intake_shoot){FSM_intake.command(FSM_Intake.Current_State.shoot);}
         else if (check_intake_in){FSM_intake.command(FSM_Intake.Current_State.In);}
         else {FSM_intake.command(FSM_Intake.Current_State.Stop);}
 
@@ -197,33 +199,6 @@ public class Drive extends OpMode {
             FSM_shooter_nectar.command(FSM_Shooter_nectar.Current_State.Mid);}
         else {
             FSM_shooter_nectar.command(FSM_Shooter_nectar.Current_State.Stop);}
-
-        // Turret
-        if (gamepad1.square && check_square){
-            check_turret = !check_turret;
-            check_square = false;}
-        else if (!gamepad1.square) {
-            check_square = true;}
-        if (check_turret && follower.pose().y() <=-90){
-            FSM_turret.command(FSM_Turret.Current_State.Lock_red_garden);}
-        else if (check_turret && follower.pose().y() >= -54){
-            FSM_turret.command(FSM_Turret.Current_State.Lock_red_human);}
-        else {
-            FSM_turret.command(FSM_Turret.Current_State.M0);}
-        if (gamepad2.dpad_right && check_dpadR2) {
-            if (follower.pose().y() <= -72)
-                offset_garden += 2;
-            else {offset_human += 2;}
-            check_dpadR2 = false;
-        } else if (!gamepad2.dpad_right) {
-            check_dpadR2 = true;}
-        if (gamepad2.dpad_left && check_dpadL2) {
-            if (follower.pose().y() <= -72)
-                offset_garden -= 2;
-            else {offset_human -= 2;}
-            check_dpadL2 = false;
-        } else if (!gamepad2.dpad_left) {
-            check_dpadL2 = true;}
 
         // SPEED_SHOOT
         if (gamepad2.right_bumper && check_bumperR2){
@@ -254,12 +229,38 @@ public class Drive extends OpMode {
         else if (!gamepad2.dpadDownWasPressed()) {
             check_DpadDOWN = true;}
         if (check_flower){
-            flower1.setPosition(1);
             flower2.setPosition(1);
         } else {
-            flower1.setPosition(0.25);
             flower2.setPosition(0.25);
         }
+
+        // Turret // Pedro Uses
+        if (gamepad1.square && check_square){
+            check_turret = !check_turret;
+            check_square = false;}
+        else if (!gamepad1.square) {
+            check_square = true;}
+        if (check_turret && follower.pose().y() <=-90){
+            FSM_turret.command(FSM_Turret.Current_State.Lock_red_garden);}
+        else if (check_turret && follower.pose().y() >= -54){
+            FSM_turret.command(FSM_Turret.Current_State.Lock_red_human);}
+        else {
+            FSM_turret.command(FSM_Turret.Current_State.M0);}
+        if (gamepad2.dpad_right && check_dpadR2) {
+            if (follower.pose().y() <= -72)
+                offset_garden += 2;
+            else {offset_human += 2;}
+            check_dpadR2 = false;
+        } else if (!gamepad2.dpad_right) {
+            check_dpadR2 = true;}
+        if (gamepad2.dpad_left && check_dpadL2) {
+            if (follower.pose().y() <= -72)
+                offset_garden -= 2;
+            else {offset_human -= 2;}
+            check_dpadL2 = false;
+        } else if (!gamepad2.dpad_left) {
+            check_dpadL2 = true;}
+
 
         debugging();
         FSM_shooter_pollen.update_state();
@@ -267,9 +268,9 @@ public class Drive extends OpMode {
         FSM_intake.update_state();
         FSM_closer_pollen.update_state();
         FSM_closer_nectar.update_state();
-        FSM_turret.update_state(follower,gamepad2.left_stick_x,offset_garden,offset_human);
         telemetryX.update();
-            follower.update();
+        FSM_turret.update_state(follower,gamepad2.left_stick_x,offset_garden,offset_human);
+        follower.update();
             drawing.draw(packet.fieldOverlay(),follower.pose());
             packet = new TelemetryPacket(false);
             FtcDashboard.getInstance().sendTelemetryPacket(packet);
