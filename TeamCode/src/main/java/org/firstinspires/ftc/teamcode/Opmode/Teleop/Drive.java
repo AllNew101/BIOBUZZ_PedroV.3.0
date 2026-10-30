@@ -78,6 +78,8 @@ public class Drive extends OpMode {
     boolean check_DpadDOWN = true;
     boolean check_flower = false;
     boolean check_intake_boost = false;
+    boolean check_Turret_Red = true;
+    boolean check_ps2 = true;
 
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -117,9 +119,9 @@ public class Drive extends OpMode {
         telemetryX.init(telemetry);
         telemetryX.clear();
 
-
         follower = Constants.create(hardwareMap);
-        follower.setPose(new Pose(57,-135,Math.toRadians(90)));
+//        follower.setPose(new Pose(57,-135,Math.toRadians(90)));
+        follower.setPose(new Pose(84,-84,Math.toRadians(90)));
         follower.update();
     }
     ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -248,9 +250,9 @@ public class Drive extends OpMode {
         else if (!gamepad1.square) {
             check_square = true;}
         if (check_turret && follower.pose().y() <=-90){
-            FSM_turret.command(FSM_Turret.Current_State.Lock_red_garden);}
+            FSM_turret.command(FSM_Turret.Current_State.Lock_garden);}
         else if (check_turret && follower.pose().y() >= -54){
-            FSM_turret.command(FSM_Turret.Current_State.Lock_red_human);}
+            FSM_turret.command(FSM_Turret.Current_State.Lock_human);}
         else {
             FSM_turret.command(FSM_Turret.Current_State.M0);}
         if (gamepad2.dpad_right && check_dpadR2) {
@@ -267,7 +269,10 @@ public class Drive extends OpMode {
             check_dpadL2 = false;
         } else if (!gamepad2.dpad_left) {
             check_dpadL2 = true;}
-
+        if (gamepad2.ps && check_ps2){
+            check_Turret_Red = !check_Turret_Red;
+            check_ps2 = false;
+        } else if (!gamepad2.ps){check_ps2 = true;}
 
         debugging();
         FSM_shooter_pollen.update_state();
@@ -276,7 +281,7 @@ public class Drive extends OpMode {
         FSM_closer_pollen.update_state();
         FSM_closer_nectar.update_state();
         telemetryX.update();
-        FSM_turret.update_state(follower,gamepad2.left_stick_x,offset_garden,offset_human);
+        FSM_turret.update_state(follower,gamepad2.left_stick_x,offset_garden,offset_human,check_Turret_Red);
         follower.update();
             drawing.draw(packet.fieldOverlay(),follower.pose());
             packet = new TelemetryPacket(false);

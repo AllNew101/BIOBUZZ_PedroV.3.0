@@ -12,10 +12,10 @@ public class Distance {
     ElapsedTime time;
     Follower follower;
 
-    public double[] Red_Goal_1 = {58 , -84 , 0}; // x,y,theta
-    public double[] Red_Goal_2 = {60, -60 , 0}; // x,y,theta
-    public double[] Blue_Goal_1 = {123, -18 , 0}; // x,y,theta
-    public double[] Blue_Goal_2 = {123, -18 , 0}; // x,y,theta
+    public double[] Red_Goal_1 = {58 , -84 , 0}; // x,y,theta ** Garden
+    public double[] Red_Goal_2 = {58, -60 , 0}; // x,y,theta ** Human
+    public double[] Blue_Goal_1 = {86, -84 , 0}; // x,y,theta ** Garden
+    public double[] Blue_Goal_2 = {86, -18 , 0}; // x,y,theta ** Human
     double Max_theta = Config_Tuning.Turret.MaxTheta;
     double Min_theta = Config_Tuning.Turret.MinTheta;
     double Gear_ratio = 3; // 3:1

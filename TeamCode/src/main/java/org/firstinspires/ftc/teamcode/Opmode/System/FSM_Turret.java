@@ -1,7 +1,6 @@
 package org.firstinspires.ftc.teamcode.Opmode.System;
 
 import com.pedropathing.follower.Follower;
-import com.pedropathing.math.Pose;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -13,10 +12,7 @@ import org.firstinspires.ftc.teamcode.Opmode.Calculate.Distance;
 import org.firstinspires.ftc.teamcode.Opmode.Config_Tuning;
 
 public class FSM_Turret {
-
-    double Idle_target = Config_Tuning.FSM_Turret.Idle_target;
-
-    public enum Current_State{Idle_state, Lock_red_human, Lock_red_garden, Lock_blue_human, Lock_blue_garden, L2,L1,M0,R1,R2}
+    public enum Current_State{Lock_human, Lock_garden, L2,L1,M0,R1,R2}
     Servo turret1,turret2;
     ElapsedTime time;
     Current_State current_state;
@@ -43,17 +39,17 @@ public class FSM_Turret {
     }
     public void check_goal (){}
 
-    public void update_state(Follower follower,double gamepad,double offset_garden,double offset_human){// if use pid need to have target_theta
+    public void update_state(Follower follower,double gamepad,double offset_garden,double offset_human,boolean check_red){// if use pid need to have target_theta
         switch (current_state){
 //            case Idle_state:
 //                break;
-            case Lock_red_garden:
-                turret1.setPosition(distance.Pythagoras(follower.pose().x(),follower.pose().y(),follower.pose().heading(),1,true,offset_garden,offset_human)[2]);
-                turret2.setPosition(distance.Pythagoras(follower.pose().x(),follower.pose().y(),follower.pose().heading(),1,true,offset_garden,offset_human)[2]);
+            case Lock_garden:
+                turret1.setPosition(distance.Pythagoras(follower.pose().x(),follower.pose().y(),follower.pose().heading(),1,check_red,offset_garden,offset_human)[2]);
+                turret2.setPosition(distance.Pythagoras(follower.pose().x(),follower.pose().y(),follower.pose().heading(),1,check_red,offset_garden,offset_human)[2]);
                 break;
-            case Lock_red_human:
-                turret1.setPosition(distance.Pythagoras(follower.pose().x(),follower.pose().y(),follower.pose().heading(),2,true,offset_garden,offset_human)[2]);
-                turret2.setPosition(distance.Pythagoras(follower.pose().x(),follower.pose().y(),follower.pose().heading(),2,true,offset_garden,offset_human)[2]);
+            case Lock_human:
+                turret1.setPosition(distance.Pythagoras(follower.pose().x(),follower.pose().y(),follower.pose().heading(),2,check_red,offset_garden,offset_human)[2]);
+                turret2.setPosition(distance.Pythagoras(follower.pose().x(),follower.pose().y(),follower.pose().heading(),2,check_red,offset_garden,offset_human)[2]);
                 break;
             case L2:
                 turret1.setPosition(0);
