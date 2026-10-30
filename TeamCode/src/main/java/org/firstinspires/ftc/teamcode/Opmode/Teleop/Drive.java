@@ -77,6 +77,7 @@ public class Drive extends OpMode {
     boolean check_triggerL2 = true;
     boolean check_DpadDOWN = true;
     boolean check_flower = false;
+    boolean check_intake_boost = false;
 
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -150,12 +151,12 @@ public class Drive extends OpMode {
             FSM_closer_pollen.command(FSM_Closer_pollen.Current_State.Open);
             FSM_closer_nectar.command(FSM_Closer_nectar.Current_State.Open);
             FSM_intake.command(FSM_Intake.Current_State.shoot);// Intake
-            RGB.setPosition(0.5);
+            RGB.setPosition(0.3);
             check_intake_shoot = true;
         }else {
             FSM_closer_pollen.command(FSM_Closer_pollen.Current_State.Close);
             FSM_closer_nectar.command(FSM_Closer_nectar.Current_State.Close);
-            RGB.setPosition(0.277);
+            RGB.setPosition(0.5);
             check_intake_shoot = false;}
 
         // INTAKE
@@ -171,8 +172,14 @@ public class Drive extends OpMode {
             check_circle = false;
         } else if (!gamepad1.circleWasPressed()) {
             check_circle = true;}
+        // BOOST
+        if (gamepad2.cross){
+            check_intake_boost = true;
+        }else{
+            check_intake_boost = false;}
         // FUNCTION
-        if (check_intake_out){FSM_intake.command(FSM_Intake.Current_State.Out);}
+        if (check_intake_boost){FSM_intake.command(FSM_Intake.Current_State.Boost);}
+        else if (check_intake_out){FSM_intake.command(FSM_Intake.Current_State.Out);}
         else if (check_intake_shoot){FSM_intake.command(FSM_Intake.Current_State.shoot);}
         else if (check_intake_in){FSM_intake.command(FSM_Intake.Current_State.In);}
         else {FSM_intake.command(FSM_Intake.Current_State.Stop);}

@@ -4,6 +4,7 @@ package org.firstinspires.ftc.teamcode.Opmode.System;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 import com.acmerobotics.dashboard.FtcDashboard;
+import com.pedropathing.follower.Follower;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -12,6 +13,13 @@ public class  TelemetryX {
     FtcDashboard dashboard = FtcDashboard.getInstance();
     Telemetry dashboardTelemetry = dashboard.getTelemetry();
     Telemetry Driver_tele;
+
+    public void addData(String x, double x1) {
+    }
+
+    public void addData(String followerMode, Follower.Mode mode) {
+
+    }
 
     public enum Target {
         DRIVER,

@@ -39,11 +39,11 @@ public class Config_Tuning {
         public static double kp = 0.006;
     }
     @Config
-    public static class Shooter_Nectar { // Color_ball
+    public static class Shooter_Nectar { // Color_ballpublic static double kd = 0;
         public static double kd = 0;
         public static double kf = 0.0004166667;
         public static double ki = 0;
-        public static double kp = 0.0046;
+        public static double kp = 0.0054;
     }
     @Config
     public static class FSM_Turret {
@@ -59,8 +59,9 @@ public class Config_Tuning {
     @Config
     public static class Intake {
         public static double Intake_In = 0.8;
-        public static double Intake_Shoot = 0.5;
         public static double Intake_Out = -0.8;
+        public static double Intake_Shoot = 0.5;
+        public static double Intake_Boost = 0.8;
     }
     @Config
     public static class FSM_Closer {
