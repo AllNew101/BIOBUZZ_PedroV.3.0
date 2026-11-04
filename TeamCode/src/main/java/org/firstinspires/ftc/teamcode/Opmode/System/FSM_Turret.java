@@ -12,7 +12,7 @@ import org.firstinspires.ftc.teamcode.Opmode.Calculate.Distance;
 import org.firstinspires.ftc.teamcode.Opmode.Config_Tuning;
 
 public class FSM_Turret {
-    public enum Current_State{Lock_human, Lock_garden, L2,L1,M0,R1,R2}
+    public enum Current_State{Lock,L2,L1,M0,R1,R2}
     Servo turret1,turret2;
     ElapsedTime time;
     Current_State current_state;
@@ -39,17 +39,13 @@ public class FSM_Turret {
     }
     public void check_goal (){}
 
-    public void update_state(Follower follower,double gamepad,double offset_garden,double offset_human,boolean check_red){// if use pid need to have target_theta
+    public void update_state(double gamepad, double[] dis){// if use pid need to have target_theta
         switch (current_state){
 //            case Idle_state:
 //                break;
-            case Lock_garden:
-                turret1.setPosition(distance.Pythagoras(follower.pose().x(),follower.pose().y(),follower.pose().heading(),1,check_red,offset_garden,offset_human)[2]);
-                turret2.setPosition(distance.Pythagoras(follower.pose().x(),follower.pose().y(),follower.pose().heading(),1,check_red,offset_garden,offset_human)[2]);
-                break;
-            case Lock_human:
-                turret1.setPosition(distance.Pythagoras(follower.pose().x(),follower.pose().y(),follower.pose().heading(),2,check_red,offset_garden,offset_human)[2]);
-                turret2.setPosition(distance.Pythagoras(follower.pose().x(),follower.pose().y(),follower.pose().heading(),2,check_red,offset_garden,offset_human)[2]);
+            case Lock:
+                turret1.setPosition(dis[2]);
+                turret2.setPosition(dis[2]);
                 break;
             case L2:
                 turret1.setPosition(0);

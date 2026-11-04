@@ -32,7 +32,7 @@ public class FSM_Intake {
         current_state = change_state;
     }
 
-    public void update_state (){
+    public void update_state (double offset){
         double power_intake_in = Config_Tuning.Intake.Intake_In;
         double power_intake_out = Config_Tuning.Intake.Intake_Out;
         double power_intake_shoot = Config_Tuning.Intake.Intake_Shoot;
@@ -43,8 +43,8 @@ public class FSM_Intake {
                 intake2.setPower(power_intake_in);
                 break;
             case shoot:
-                intake1.setPower(power_intake_shoot);
-                intake2.setPower(power_intake_shoot);
+                intake1.setPower(power_intake_shoot + offset);
+                intake2.setPower(power_intake_shoot + offset);
                 break;
             case Out:
                 intake1.setPower(power_intake_out);

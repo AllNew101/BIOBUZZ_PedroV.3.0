@@ -15,6 +15,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.Opmode.Calculate.Distance;
+import org.firstinspires.ftc.teamcode.Opmode.Calculate.lime_light;
 import org.firstinspires.ftc.teamcode.Opmode.Config_Tuning;
 import org.firstinspires.ftc.teamcode.Opmode.System.FSM_Closer_nectar;
 import org.firstinspires.ftc.teamcode.Opmode.System.FSM_Closer_pollen;
@@ -40,6 +41,7 @@ public class Drive extends OpMode {
     FSM_Intake FSM_intake;
     FSM_Closer_pollen FSM_closer_pollen;
     FSM_Closer_nectar FSM_closer_nectar;
+    lime_light limelight;
     ElapsedTime time;
     DcMotorEx motorRR;
     DcMotorEx motorRL;
@@ -76,10 +78,15 @@ public class Drive extends OpMode {
     boolean check_triggerR2 = true;
     boolean check_triggerL2 = true;
     boolean check_DpadDOWN = true;
+    boolean check_DpadUP = true;
+    double offset_intake;
+    boolean check_square2 = true;
     boolean check_flower = false;
     boolean check_intake_boost = false;
     boolean check_Turret_Red = true;
     boolean check_ps2 = true;
+
+    double[] dis ;
 
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -96,6 +103,7 @@ public class Drive extends OpMode {
         FSM_closer_nectar = new FSM_Closer_nectar();
         FSM_turret = new FSM_Turret();
         distance = new Distance();
+        limelight = new lime_light();
 
         motorRR = hardwareMap.get(DcMotorEx.class, "Back_R");
         motorRL = hardwareMap.get(DcMotorEx.class, "Back_L");
@@ -116,12 +124,13 @@ public class Drive extends OpMode {
         FSM_closer_nectar.init(hardwareMap);
         FSM_turret.init(hardwareMap,time);
         distance.init(time);
+        limelight.init(hardwareMap);
         telemetryX.init(telemetry);
         telemetryX.clear();
 
         follower = Constants.create(hardwareMap);
-//        follower.setPose(new Pose(57,-135,Math.toRadians(90)));
-        follower.setPose(new Pose(84,-84,Math.toRadians(90)));
+        follower.setPose(new Pose(57,-135,Math.toRadians(90)));
+//        follower.setPose(new Pose(84,-84,Math.toRadians(90)));
         follower.update();
     }
     ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -179,6 +188,17 @@ public class Drive extends OpMode {
             check_intake_boost = true;
         }else{
             check_intake_boost = false;}
+        // SHOOT_CONFIG
+        if (gamepad2.dpadDownWasPressed() && check_DpadDOWN){
+            offset_intake -= 0.05;
+            check_DpadDOWN = false;
+        } else if (!gamepad2.dpadDownWasPressed()) {
+            check_DpadDOWN = true;}
+        if (gamepad2.dpadUpWasPressed() && check_DpadUP){
+            offset_intake += 0.05;
+            check_DpadUP = false;
+        } else if (!gamepad2.dpadUpWasPressed()) {
+            check_DpadUP = true;}
         // FUNCTION
         if (check_intake_boost){FSM_intake.command(FSM_Intake.Current_State.Boost);}
         else if (check_intake_out){FSM_intake.command(FSM_Intake.Current_State.Out);}
@@ -211,7 +231,7 @@ public class Drive extends OpMode {
 
         // SPEED_SHOOT
         if (gamepad2.right_bumper && check_bumperR2){
-            Config_Tuning.FSM_Shooter.mid_pollen += 10;
+            Config_Tuning.FSM_Shooter.mid_pollen += 5;
             check_bumperR2 = false;}
         else if(!gamepad2.right_bumper) {
             check_bumperR2=true;}
@@ -221,7 +241,7 @@ public class Drive extends OpMode {
         else if(!gamepad2.left_bumper)  {
             check_bumperL2=true;}
         if (gamepad2.right_trigger > 0 && check_triggerR2) {
-            Config_Tuning.FSM_Shooter.mid_pollen -= 10;
+            Config_Tuning.FSM_Shooter.mid_pollen -= 5;
             check_triggerR2 = false;}
         else if(gamepad2.right_trigger <= 0 ) {
             check_triggerR2=true;}
@@ -232,10 +252,10 @@ public class Drive extends OpMode {
             check_triggerL2=true;}
 
         //Flower
-        if (gamepad2.dpadDownWasPressed() && check_DpadDOWN) {
+        if (gamepad2.squareWasPressed() && check_DpadDOWN) {
             check_DpadDOWN = false;
             check_flower = !check_flower;}
-        else if (!gamepad2.dpadDownWasPressed()) {
+        else if (!gamepad2.squareWasPressed()) {
             check_DpadDOWN = true;}
         if (check_flower){
             flower2.setPosition(1);
@@ -244,17 +264,21 @@ public class Drive extends OpMode {
         }
 
         // Turret // Pedro Uses
+
         if (gamepad1.square && check_square){
             check_turret = !check_turret;
             check_square = false;}
         else if (!gamepad1.square) {
             check_square = true;}
-        if (check_turret && follower.pose().y() <=-90){
-            FSM_turret.command(FSM_Turret.Current_State.Lock_garden);}
-        else if (check_turret && follower.pose().y() >= -54){
-            FSM_turret.command(FSM_Turret.Current_State.Lock_human);}
+        if (check_turret && follower.pose().y() <=-90){// Red_Garden_Blue_Human
+            FSM_turret.command(FSM_Turret.Current_State.Lock);
+            dis = distance.Pythagoras(follower.pose().x(),follower.pose().y(),follower.pose().heading(), Distance.Goal.Red_Garden_Blue_Human ,check_Turret_Red,offset_garden,offset_human);}
+        else if (check_turret && follower.pose().y() >= -54){ // Red_Human_Blue_Garden
+            FSM_turret.command(FSM_Turret.Current_State.Lock);
+            dis = distance.Pythagoras(follower.pose().x(),follower.pose().y(),follower.pose().heading(), Distance.Goal.Red_Human_Blue_Garden ,check_Turret_Red,offset_garden,offset_human);}
         else {
-            FSM_turret.command(FSM_Turret.Current_State.M0);}
+            FSM_turret.command(FSM_Turret.Current_State.M0);
+            dis = distance.IDLE();}
         if (gamepad2.dpad_right && check_dpadR2) {
             if (follower.pose().y() <= -72)
                 offset_garden += 2;
@@ -277,11 +301,11 @@ public class Drive extends OpMode {
         debugging();
         FSM_shooter_pollen.update_state();
         FSM_shooter_nectar.update_state();
-        FSM_intake.update_state();
+        FSM_intake.update_state(offset_intake);
         FSM_closer_pollen.update_state();
         FSM_closer_nectar.update_state();
         telemetryX.update();
-        FSM_turret.update_state(follower,gamepad2.left_stick_x,offset_garden,offset_human,check_Turret_Red);
+        FSM_turret.update_state(gamepad2.left_stick_x,dis);
         follower.update();
             drawing.draw(packet.fieldOverlay(),follower.pose());
             packet = new TelemetryPacket(false);
@@ -298,12 +322,15 @@ public class Drive extends OpMode {
                 telemetryX.addData("Target_Pollen",FSM_shooter_pollen.get_info_shooter()[1], TelemetryX.Target.BOTH);
                 telemetryX.addData("Target_Nectar",FSM_shooter_nectar.get_info_shooter()[1], TelemetryX.Target.BOTH);
                 telemetryX.addData("Current_State_Closer",FSM_closer_pollen.get_state(),TelemetryX.Target.BOTH);
-                telemetryX.addData("theta_target",(distance.Pythagoras(follower.pose().x(),follower.pose().y(),follower.pose().heading(),2,true,offset_garden,offset_human)[1]),TelemetryX.Target.BOTH);
+                telemetryX.addData("theta_target",(dis[1]),TelemetryX.Target.BOTH);
                 telemetryX.addData("X",follower.pose().x(),TelemetryX.Target.BOTH);
                 telemetryX.addData("Y",follower.pose().y(),TelemetryX.Target.BOTH);
                 telemetryX.addData("theta_robot",Math.toDegrees(follower.pose().heading()),TelemetryX.Target.BOTH);
                 telemetryX.addData("offset_human",offset_human,TelemetryX.Target.BOTH);
                 telemetryX.addData("offset_garden",offset_garden,TelemetryX.Target.BOTH);
+                telemetryX.addData("TX",limelight.get_x(),TelemetryX.Target.BOTH);
+                telemetryX.addData("TY",limelight.get_y(distance.pythagoras_limelight(follower.pose().x(),follower.pose().y(),follower.pose().heading())),TelemetryX.Target.BOTH);
+                telemetryX.addData("Intake_shoot",offset_intake + Config_Tuning.Intake.Intake_Shoot, TelemetryX.Target.BOTH);
 
 
         }

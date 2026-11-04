@@ -7,6 +7,9 @@ import org.firstinspires.ftc.teamcode.Opmode.Config_Tuning;
 
 public class FSM_Closer_nectar {
 
+    public void command(FSM_Intake.Current_State currentState) {
+    }
+
     public enum Current_State{Close,Open}
     Servo closer_nectar;
     Current_State current_state;

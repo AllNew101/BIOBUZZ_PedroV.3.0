@@ -8,6 +8,9 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.teamcode.Opmode.Config_Tuning;
 
 public class FSM_Shooter_pollen {
+    public void init(HardwareMap hardwareMap) {
+    }
+
     public enum Current_State{Far,Mid,Stop}
 
     PID_Shooter PID;

@@ -48,11 +48,11 @@ public class Config_Tuning {
     @Config
     public static class FSM_Turret {
         public static double Idle_target = 0;
-    }
+    }  
     @Config
     public static class FSM_Shooter {
         public static double far = 800;
-        public static double mid_pollen = 1140;
+        public static double mid_pollen = 1120  ;
         public static double mid_nectar = 1210;
         public static double power = 0.5;
     }
