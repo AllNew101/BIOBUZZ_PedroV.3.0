@@ -52,16 +52,16 @@ public class Config_Tuning {
     @Config
     public static class FSM_Shooter {
         public static double far = 800;
-        public static double mid_pollen = 1120  ;
+        public static double mid_pollen = 1120;
         public static double mid_nectar = 1210;
         public static double power = 0.5;
     }
     @Config
     public static class Intake {
-        public static double Intake_In = 0.8;
+        public static double Intake_In = 1.0;
         public static double Intake_Out = -0.8;
         public static double Intake_Shoot = 0.5;
-        public static double Intake_Boost = 0.8;
+        public static double Intake_Boost = 0.9;
     }
     @Config
     public static class FSM_Closer {

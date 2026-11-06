@@ -10,38 +10,31 @@ import static com.pedropathing.ivy.groups.Groups.race;
 import static com.pedropathing.ivy.groups.Groups.sequential;
 import static com.pedropathing.ivy.pedro.PedroCommands.follow;
 
-import android.bluetooth.le.ScanSettings;
-
-import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.pedropathing.api.Paths;
 import com.pedropathing.api.PoseFactory;
 import com.pedropathing.follower.Follower;
 import com.pedropathing.ivy.Command;
-import com.pedropathing.ivy.CommandBuilder;
 import com.pedropathing.ivy.Scheduler;
 import com.pedropathing.math.Pose;
 import com.pedropathing.paths.Path;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
-import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.Opmode.Calculate.Distance;
-import org.firstinspires.ftc.teamcode.Opmode.Calculate.lime_light;
 import org.firstinspires.ftc.teamcode.Opmode.Config_Tuning;
 import org.firstinspires.ftc.teamcode.Opmode.System.FSM_Closer_nectar;
 import org.firstinspires.ftc.teamcode.Opmode.System.FSM_Intake;
 import org.firstinspires.ftc.teamcode.Opmode.System.FSM_Shooter_nectar;
 import org.firstinspires.ftc.teamcode.Opmode.System.FSM_Turret;
 import org.firstinspires.ftc.teamcode.Opmode.System.TelemetryX;
-import org.firstinspires.ftc.teamcode.Opmode.Teleop.Drawing;
 import org.firstinspires.ftc.teamcode.pedro.Constants;
 import org.firstinspires.ftc.teamcode.Opmode.System.FSM_Shooter_pollen;
 import org.firstinspires.ftc.teamcode.Opmode.System.FSM_Closer_pollen;
 
 @Autonomous
-public class Blueprint_Auto extends OpMode {
+public class Auto_Garden_Red extends OpMode {
     Follower follower;
     PoseFactory poseFactory = PoseFactory.degrees();
 
@@ -72,11 +65,14 @@ public class Blueprint_Auto extends OpMode {
     private final Pose Flower1_Keep = poseFactory.of(50, -14, 90);
     private final Pose scorePose3_Backward = poseFactory.of(50, -24, 90);
     private final Pose scorePose3 = poseFactory.of(50, -19, 285);
-    private final Pose Flower2_Turn = poseFactory.of(26, -94, 180);
+    private final Pose Flower2_Turn = poseFactory.of(30, -94, 180);
     private final Pose Flower2_Turn_ControlPoint = poseFactory.of(17, -44, 0);
     private final Pose Flower2_Turn_ControlPoint2 = poseFactory.of(50, -98, 180);
     private final Pose Flower2_Keep = poseFactory.of(19, -94, 180);
-    private final Pose scorePose4 = poseFactory.of(50, -126, 75);
+    private final Pose scorePose4 = poseFactory.of(50, -126, 70);
+    private final Pose Park = poseFactory.of(10, -50, 90);
+    private final Pose Park_ControlPoint = poseFactory.of(17, -114, 0);
+    private final Pose Park_ControlPoint2 = poseFactory.of(9, -73, 0);
 
     // Path methods
     private Path startToScore() {return line(startPose, scorePose).linear(startPose, scorePose);}
@@ -89,6 +85,8 @@ public class Blueprint_Auto extends OpMode {
     private Path ScoreToFlower2_Turn(){return Paths.curve(scorePose3, Flower2_Turn_ControlPoint, Flower2_Turn_ControlPoint2, Flower2_Turn).linear(scorePose3,Flower2_Turn);}
     private Path ScoreToFlower2_Keep() {return Paths.line(Flower2_Turn, Flower2_Keep).linear(Flower2_Turn, Flower2_Keep);}
     private Path Flower2ToScore() {return Paths.line(Flower2_Keep,scorePose4).linear(Flower2_Keep,scorePose4);}
+    private Path ScoreTo_Park(){return Paths.curve(scorePose4, Park_ControlPoint, Park_ControlPoint2, Park).linear(scorePose4,Park);}
+
 
 
     Command Shooter_Pollen_ON = instant(() -> FSM_shooter_pollen.command(FSM_Shooter_pollen.Current_State.Mid));
@@ -102,21 +100,20 @@ public class Blueprint_Auto extends OpMode {
     Command Turret_OFF = instant(() -> FSM_turret.command(FSM_Turret.Current_State.M0));
     Command Flower_ON = instant(() -> flower2.setPosition(1));
     Command Flower_OFF = instant(() -> flower2.setPosition(0.25));
-    Command Power_shoot_1 = instant(() -> Config_Tuning.FSM_Shooter.mid_pollen = 1120);
-    Command Power_shoot_2 = instant(() -> Config_Tuning.FSM_Shooter.mid_pollen = 1110);
-
+    Command Power_shoot_1 = instant(() -> Config_Tuning.FSM_Shooter.mid_pollen = 1110);
+    Command Power_shoot_2 = instant(() -> Config_Tuning.FSM_Shooter.mid_pollen = 1100);
 
     private Command AUTO() {
         return sequential(
                 parallel(Turret_OFF,Power_shoot_1,Shooter_Pollen_ON,Close_pollen),
                 follow(follower, startToScore()),
-                waitMs(600).with(Intake_Boost),
+                waitMs(400).with(Intake_Shoot),
                 Shoot_pollen,
-                waitMs(500),
+                waitMs(600),
                 parallel(Close_pollen,Intake_In,follow(follower, Garden())),
-                waitMs(500),
-                follow(follower, GardenToScore()),
-                waitMs(200).with(Intake_Boost),
+                waitMs(800),
+                follow(follower, GardenToScore()).with(Power_shoot_2),
+                waitMs(200).with(Intake_Shoot),
                 Shoot_pollen,
                 waitMs(600),
                 follow(follower, ScoreToFlower_Turn()).with(Close_pollen).with(Flower_ON),
@@ -126,18 +123,19 @@ public class Blueprint_Auto extends OpMode {
                 follow(follower, FlowerToScore_Backward()),
                 waitMs(600),
                 follow(follower, FlowerToScore()),
-                waitMs(200).with(Intake_Boost).with(Flower_OFF),
+                waitMs(200).with(Intake_Shoot).with(Flower_OFF),
                 Shoot_pollen,
                 waitMs(1000),
                 follow(follower, ScoreToFlower2_Turn()).with(Close_pollen),
                 Flower_ON,
                 waitMs(400),
                 race( follow(follower, ScoreToFlower2_Keep()),waitMs(1000)),
-                waitMs(1000),
-                follow(follower, Flower2ToScore()).with(Power_shoot_2),
-                waitMs(200).with(Intake_Boost).with(Flower_OFF),
+                waitMs(1200),
+                follow(follower, Flower2ToScore()),
+                waitMs(200).with(Intake_Shoot),
                 Shoot_pollen,
-                waitMs(600)
+                waitMs(1000).with(Flower_OFF),
+                follow(follower, ScoreTo_Park()).with(Close_pollen)
                 );
     }
 
