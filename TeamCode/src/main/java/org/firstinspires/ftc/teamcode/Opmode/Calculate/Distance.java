@@ -59,7 +59,6 @@ public class Distance {
         if (Y <= -72){Target_Theta_Servo = degree_to_Servo(Target_Theta - offset_garden);}
         else {Target_Theta_Servo = degree_to_Servo(Target_Theta - offset_human);}
 
-
         double[] pythagoras = {distance,Target_Theta,Target_Theta_Servo};
         return pythagoras;
     }

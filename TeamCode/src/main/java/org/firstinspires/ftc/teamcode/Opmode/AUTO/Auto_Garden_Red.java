@@ -56,23 +56,27 @@ public class Auto_Garden_Red extends OpMode {
     // Poses
     private final Pose startPose = poseFactory.of(57, -135, 90);
     private final Pose scorePose = poseFactory.of(57, -128, 90);
-    private final Pose GardenPose = poseFactory.of(14, -134, 180);
     private final Pose GardenPose_ControlPoint = poseFactory.of(54, -140, 0);
-    private final Pose scorePose2 = poseFactory.of(50, -19, 285);
+    private final Pose GardenPose = poseFactory.of(8, -134, 180);
+
     private final Pose scorePose2_ControlPoint = poseFactory.of(28, -109, 0);
     private final Pose scorePose2_ControlPoint2 = poseFactory.of(17, -44, 0);
-    private final Pose Flower1_Turn = poseFactory.of(50, -20, 90);
+    private final Pose scorePose2 = poseFactory.of(50, -22, 285);
+
+    private final Pose Flower1_Turn = poseFactory.of(50, -24, 90);
     private final Pose Flower1_Keep = poseFactory.of(50, -14, 90);
-    private final Pose scorePose3_Backward = poseFactory.of(50, -24, 90);
-    private final Pose scorePose3 = poseFactory.of(50, -19, 285);
-    private final Pose Flower2_Turn = poseFactory.of(30, -94, 180);
+    private final Pose scorePose3_Backward = poseFactory.of(50, -26, 90);
+    private final Pose scorePose3 = poseFactory.of(50, -22, 285);
+
     private final Pose Flower2_Turn_ControlPoint = poseFactory.of(17, -44, 0);
     private final Pose Flower2_Turn_ControlPoint2 = poseFactory.of(50, -98, 180);
-    private final Pose Flower2_Keep = poseFactory.of(19, -94, 180);
-    private final Pose scorePose4 = poseFactory.of(50, -126, 70);
-    private final Pose Park = poseFactory.of(10, -50, 90);
+    private final Pose Flower2_Turn = poseFactory.of(30, -94, 180);
+    private final Pose Flower2_Keep = poseFactory.of(15, -94, 180);
+
+    private final Pose scorePose4 = poseFactory.of(50, -126, 75);
     private final Pose Park_ControlPoint = poseFactory.of(17, -114, 0);
     private final Pose Park_ControlPoint2 = poseFactory.of(9, -73, 0);
+    private final Pose Park = poseFactory.of(10, -50, 90);
 
     // Path methods
     private Path startToScore() {return line(startPose, scorePose).linear(startPose, scorePose);}
@@ -109,11 +113,11 @@ public class Auto_Garden_Red extends OpMode {
                 follow(follower, startToScore()),
                 waitMs(400).with(Intake_Shoot),
                 Shoot_pollen,
-                waitMs(600),
+                waitMs(800),
                 parallel(Close_pollen,Intake_In,follow(follower, Garden())),
                 waitMs(800),
                 follow(follower, GardenToScore()).with(Power_shoot_2),
-                waitMs(200).with(Intake_Shoot),
+                waitMs(200).with(Intake_Boost),
                 Shoot_pollen,
                 waitMs(600),
                 follow(follower, ScoreToFlower_Turn()).with(Close_pollen).with(Flower_ON),
@@ -123,7 +127,7 @@ public class Auto_Garden_Red extends OpMode {
                 follow(follower, FlowerToScore_Backward()),
                 waitMs(600),
                 follow(follower, FlowerToScore()),
-                waitMs(200).with(Intake_Shoot).with(Flower_OFF),
+                waitMs(200).with(Intake_Boost).with(Flower_OFF),
                 Shoot_pollen,
                 waitMs(1000),
                 follow(follower, ScoreToFlower2_Turn()).with(Close_pollen),
@@ -132,7 +136,7 @@ public class Auto_Garden_Red extends OpMode {
                 race( follow(follower, ScoreToFlower2_Keep()),waitMs(1000)),
                 waitMs(1200),
                 follow(follower, Flower2ToScore()),
-                waitMs(200).with(Intake_Shoot),
+                waitMs(200).with(Intake_Boost),
                 Shoot_pollen,
                 waitMs(1000).with(Flower_OFF),
                 follow(follower, ScoreTo_Park()).with(Close_pollen)

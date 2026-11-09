@@ -56,27 +56,32 @@ public class Auto_Garden_Red_Allies extends OpMode {
     // Poses
     private final Pose startPose = poseFactory.of(57, -135, 90);
     private final Pose scorePose = poseFactory.of(57, -128, 90);
-    private final Pose GardenPose = poseFactory.of(14, -134, 180);
     private final Pose GardenPose_ControlPoint = poseFactory.of(54, -140, 0);
-    private final Pose scorePose2 = poseFactory.of(50, -19, 285);
+    private final Pose GardenPose = poseFactory.of(8, -134, 180);
+
     private final Pose scorePose2_ControlPoint = poseFactory.of(28, -109, 0);
     private final Pose scorePose2_ControlPoint2 = poseFactory.of(17, -44, 0);
-    private final Pose Flower1_Turn = poseFactory.of(50, -20, 90);
+    private final Pose scorePose2 = poseFactory.of(50, -22, 285);
+
+    private final Pose Flower1_Turn = poseFactory.of(50, -24, 90);
     private final Pose Flower1_Keep = poseFactory.of(50, -14, 90);
-    private final Pose scorePose3_Backward = poseFactory.of(50, -24, 90);
-    private final Pose scorePose3 = poseFactory.of(50, -19, 285);
+    private final Pose scorePose3_Backward = poseFactory.of(50, -26,90);
+    private final Pose scorePose3 = poseFactory.of(50, -22, 285);
+
     private final Pose Keep_Allies = poseFactory.of(10, -50, 270);
     private final Pose Keep_Allies_ControlPoint = poseFactory.of(9, -24, 270);
     private final Pose Keep_Allies_ControlPoint2 = poseFactory.of(5, -30, 270);
-    private final Pose scorePose4 = poseFactory.of(50, -19, 285);
-    private final Pose Flower2_Turn = poseFactory.of(30, -94, 180);
+    private final Pose scorePose4 = poseFactory.of(50, -22, 285);
+
     private final Pose Flower2_Turn_ControlPoint = poseFactory.of(17, -44, 0);
     private final Pose Flower2_Turn_ControlPoint2 = poseFactory.of(50, -98, 180);
-    private final Pose Flower2_Keep = poseFactory.of(19, -94, 180);
-    private final Pose scorePose5 = poseFactory.of(50, -126, 70);
-    private final Pose Park = poseFactory.of(10, -50, 90);
+    private final Pose Flower2_Turn = poseFactory.of(30, -94, 180);
+    private final Pose Flower2_Keep = poseFactory.of(15, -94, 180);
+
+    private final Pose scorePose5 = poseFactory.of(50, -126, 75);
     private final Pose Park_ControlPoint = poseFactory.of(17, -114, 0);
     private final Pose Park_ControlPoint2 = poseFactory.of(9, -73, 0);
+    private final Pose Park = poseFactory.of(10, -50, 90);
 
     // Path methods
     private Path startToScore() {return line(startPose, scorePose).linear(startPose, scorePose);}
