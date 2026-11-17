@@ -26,7 +26,7 @@ public class Distance {
         time = elapsedTime;}
 
     public double[] IDLE (){
-        double[] idle = {0,0,0};
+        double[] idle = {0,0,0,0,0};
         return idle;
     }
 
@@ -52,7 +52,6 @@ public class Distance {
 
         Theta = Math.round(Math.toDegrees(Math.atan2(deltaY,deltaX))); // Radian to Degree
         robot =  Math.round(Math.toDegrees(robot_theta)); // Radian to Degree ** .round = ปัดเศษ
-        Target_Theta = AngleUnit.normalizeDegrees(Theta - robot);
 
         if (Target_Theta > Max_theta){Target_Theta = Max_theta;}
         else if (Target_Theta < Min_theta) {Target_Theta = Min_theta;}
@@ -79,3 +78,13 @@ public class Distance {
     }
 
 }
+
+
+//        Target_Theta = AngleUnit.normalizeDegrees(Theta - robot);
+//        Target_Theta_nectar = AngleUnit.normalizeDegrees(Theta - robot);
+
+
+//        if (Target_Theta_nectar > Max_theta_nectar){Target_Theta_nectar = Max_theta_nectar;}
+//        else if (Target_Theta_nectar < Min_theta_nectar) {Target_Theta_nectar = Min_theta_nectar;}
+//        if (Y <= -72){Target_Theta_Servo_nectar = degree_to_Servo(Target_Theta_nectar - offset_garden);}
+//        else {Target_Theta_Servo_nectar = degree_to_Servo(Target_Theta_nectar - offset_human);}

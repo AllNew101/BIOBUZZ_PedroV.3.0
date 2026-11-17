@@ -72,7 +72,7 @@
                     new PinpointLocalizer(h, localizerConfig),
                     new Mecanum(h, drivetrainConfig),
                     new Foresight(foresightConfig)
-            );
+             );
         }
 
     }

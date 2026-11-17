@@ -34,40 +34,41 @@ public class Config_Tuning {
     @Config
     public static class Shooter_Pollen { // Yellow_ball
         public static double kd = 0;
-        public static double kf = 0.0003787879;
+        public static double kf = 0.0004098361;
         public static double ki = 0;
-        public static double kp = 0.006;
+        public static double kp = 0.008;
+
     }
     @Config
     public static class Shooter_Nectar { // Color_ball
         public static double kd = 0;
-        public static double kf = 0.0003597122;
+        public static double kf = 0.0003496503;
         public static double ki = 0;
-        public static double kp = 0.0058;
+        public static double kp = 0.01;
     }
     @Config
     public static class FSM_Turret {
         public static double Idle_target = 0;
-    }  
+    }
     @Config
     public static class FSM_Shooter {
         public static double far = 800;
-        public static double mid_pollen = 1120;
-        public static double mid_nectar = 1210;
+        public static double mid_pollen = 1040;
+        public static double mid_nectar = 1600;
         public static double power = 0.5;
     }
     @Config
     public static class Intake {
-        public static double Intake_In = 1.0;
+        public static double Intake_Boost = 0.7;
+        public static double Intake_In = 1;
         public static double Intake_Out = -0.8;
         public static double Intake_Shoot = 0.5;
-        public static double Intake_Boost = 0.9;
     }
     @Config
     public static class FSM_Closer {
-        public static double close_nectar = 0.25;
+        public static double close_nectar = 0.35;
         public static double close_pollen = 0.82;
-        public static double open_nectar = 0.45;
+        public static double open_nectar = 0.65;
         public static double open_pollen = 0.7;
     }
 }

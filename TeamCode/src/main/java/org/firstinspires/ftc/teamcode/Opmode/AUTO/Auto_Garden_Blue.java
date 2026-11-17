@@ -104,7 +104,7 @@ public class Auto_Garden_Blue extends OpMode {
     Command Turret_OFF = instant(() -> FSM_turret.command(FSM_Turret.Current_State.M0));
     Command Flower_ON = instant(() -> flower2.setPosition(1));
     Command Flower_OFF = instant(() -> flower2.setPosition(0.25));
-    Command Power_shoot_1 = instant(() -> Config_Tuning.FSM_Shooter.mid_pollen = 1110);
+    Command Power_shoot_1 = instant(() -> Config_Tuning.FSM_Shooter.mid_pollen = 1100);
     Command Power_shoot_2 = instant(() -> Config_Tuning.FSM_Shooter.mid_pollen = 1100);
 
     private Command AUTO() {
