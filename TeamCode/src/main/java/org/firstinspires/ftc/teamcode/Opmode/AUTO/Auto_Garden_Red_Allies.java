@@ -51,53 +51,27 @@ public class Auto_Garden_Red_Allies extends OpMode {
 
     boolean check_Turret_Red = true;
     double offset = 0;
+    Distance.Goal Goal;
     double[] dis;
 
     // Poses
-    private final Pose startPose = poseFactory.of(57, -135, 90);
-    private final Pose scorePose = poseFactory.of(57, -128, 90);
-    private final Pose GardenPose_ControlPoint = poseFactory.of(54, -140, 0);
-    private final Pose GardenPose = poseFactory.of(8, -134, 180);
+    private final Pose startPose = poseFactory.of(57, -9, 270);
+    private final Pose scorePose = poseFactory.of(57, -16, 270);
 
-    private final Pose scorePose2_ControlPoint = poseFactory.of(28, -109, 0);
-    private final Pose scorePose2_ControlPoint2 = poseFactory.of(17, -44, 0);
-    private final Pose scorePose2 = poseFactory.of(50, -22, 285);
+    private final Pose Flower1_Turn = poseFactory.of(48, -22, 90);
+    private final Pose Flower1_Keep = poseFactory.of(48, -13, 90);
 
-    private final Pose Flower1_Turn = poseFactory.of(50, -24, 90);
-    private final Pose Flower1_Keep = poseFactory.of(50, -14, 90);
-    private final Pose scorePose3_Backward = poseFactory.of(50, -26,90);
-    private final Pose scorePose3 = poseFactory.of(50, -22, 285);
-
-    private final Pose Keep_Allies = poseFactory.of(10, -50, 270);
-    private final Pose Keep_Allies_ControlPoint = poseFactory.of(9, -24, 270);
-    private final Pose Keep_Allies_ControlPoint2 = poseFactory.of(5, -30, 270);
-    private final Pose scorePose4 = poseFactory.of(50, -22, 285);
-
-    private final Pose Flower2_Turn_ControlPoint = poseFactory.of(17, -44, 0);
-    private final Pose Flower2_Turn_ControlPoint2 = poseFactory.of(50, -98, 180);
-    private final Pose Flower2_Turn = poseFactory.of(30, -94, 180);
-    private final Pose Flower2_Keep = poseFactory.of(15, -94, 180);
-
-    private final Pose scorePose5 = poseFactory.of(50, -126, 75);
-    private final Pose Park_ControlPoint = poseFactory.of(17, -114, 0);
-    private final Pose Park_ControlPoint2 = poseFactory.of(9, -73, 0);
-    private final Pose Park = poseFactory.of(10, -50, 90);
+    private final Pose scorePose2_Backward = poseFactory.of(50, -26, 90);
+    private final Pose scorePose2 = poseFactory.of(50, -16, 270);
+    private final Pose Park = poseFactory.of(12, -30, 270);
 
     // Path methods
     private Path startToScore() {return line(startPose, scorePose).linear(startPose, scorePose);}
-    private Path Garden(){return Paths.curve(scorePose, GardenPose_ControlPoint, GardenPose).constant(GardenPose);}
-    private Path GardenToScore(){return Paths.curve(GardenPose, scorePose2_ControlPoint, scorePose2_ControlPoint2, scorePose2).linear(GardenPose,scorePose2);}
-    private Path ScoreToFlower_Turn() {return Paths.line(scorePose2, Flower1_Turn).constant(Flower1_Turn);}
+    private Path ScoreToFlower_Turn() {return Paths.line(scorePose, Flower1_Turn).constant(Flower1_Turn);}
     private Path ScoreToFlower_Keep() {return Paths.line(Flower1_Turn, Flower1_Keep).linear(Flower1_Turn, Flower1_Keep);}
-    private Path FlowerToScore_Backward() {return Paths.line(Flower1_Keep, scorePose3_Backward).linear(Flower1_Keep,scorePose3_Backward);}
-    private Path FlowerToScore() {return Paths.line(scorePose3_Backward,scorePose3).linear(scorePose3_Backward,scorePose3);}
-    private Path ScoreToAllies() {return Paths.curve(scorePose3,Keep_Allies_ControlPoint,Keep_Allies_ControlPoint2,Keep_Allies).linear(scorePose3,Keep_Allies);}
-    private Path AlliesToScore() {return Paths.line(Keep_Allies,scorePose4).linear(Keep_Allies,scorePose4);}
-    private Path ScoreToFlower2_Turn(){return Paths.curve(scorePose4, Flower2_Turn_ControlPoint, Flower2_Turn_ControlPoint2, Flower2_Turn).linear(scorePose4,Flower2_Turn);}
-    private Path ScoreToFlower2_Keep() {return Paths.line(Flower2_Turn, Flower2_Keep).linear(Flower2_Turn, Flower2_Keep);}
-    private Path Flower2ToScore() {return Paths.line(Flower2_Keep,scorePose5).linear(Flower2_Keep,scorePose5);}
-    private Path ScoreTo_Park(){return Paths.curve(scorePose5, Park_ControlPoint, Park_ControlPoint2, Park).linear(scorePose5,Park);}
-
+    private Path FlowerToScore_Backward() {return Paths.line(Flower1_Keep, scorePose2_Backward).linear(Flower1_Keep,scorePose2_Backward);}
+    private Path FlowerToScore() {return Paths.line(scorePose2_Backward,scorePose2).linear(scorePose2_Backward,scorePose2);}
+    private Path ScoreTo_Park(){return Paths.line(scorePose2,Park).linear(scorePose2,Park);}
 
 
     Command Shooter_Pollen_ON = instant(() -> FSM_shooter_pollen.command(FSM_Shooter_pollen.Current_State.Mid));
@@ -111,49 +85,33 @@ public class Auto_Garden_Red_Allies extends OpMode {
     Command Turret_OFF = instant(() -> FSM_turret.command(FSM_Turret.Current_State.M0));
     Command Flower_ON = instant(() -> flower2.setPosition(1));
     Command Flower_OFF = instant(() -> flower2.setPosition(0.25));
-    Command Power_shoot_1 = instant(() -> Config_Tuning.FSM_Shooter.mid_pollen = 1110);
-    Command Power_shoot_2 = instant(() -> Config_Tuning.FSM_Shooter.mid_pollen = 1100);
+    Command Power_shoot_1 = instant(() -> Config_Tuning.FSM_Shooter.mid_pollen = 1045);
+    Command Power_shoot_2 = instant(() -> Config_Tuning.FSM_Shooter.mid_pollen = 1030);
+    Command Power_shoot_3 = instant(() -> Config_Tuning.FSM_Shooter.mid_pollen = 1040);
+    Command Offset_1 = instant(() -> offset = -4);
+    Command Offset_2 = instant(() -> offset = -6);
+    Command Garden_Goal = instant(() -> Goal = Distance.Goal.Red_Garden_Blue_Human); // Red
+    Command Human_Goal = instant(() -> Goal = Distance.Goal.Red_Human_Blue_Garden); // Red
 
     private Command AUTO() {
         return sequential(
-                parallel(Turret_OFF,Power_shoot_1,Shooter_Pollen_ON,Close_pollen),
-                follow(follower, startToScore()),
-                waitMs(400).with(Intake_Shoot),
+                parallel(Turret_ON,Power_shoot_1,Shooter_Pollen_ON,Close_pollen,Human_Goal),
+                follow(follower, startToScore()).with(Intake_Shoot),
+                waitMs(3000), // Delay_Wait_Allies
                 Shoot_pollen,
-                waitMs(600),
-                parallel(follow(follower, Garden()),Close_pollen,Intake_In),
-                waitMs(500),
-                follow(follower, GardenToScore()),
-                waitMs(200).with(Intake_Boost),
-                Shoot_pollen,
-                waitMs(400),
+                waitMs(800),
+                parallel(Close_pollen,Intake_In),
                 follow(follower, ScoreToFlower_Turn()).with(Close_pollen),
                 Flower_ON,
-                waitMs(400),
-                race( follow(follower, ScoreToFlower_Keep()),waitMs(1000)),
-                waitMs(600),
+                waitMs(1200),
+                race(follow(follower, ScoreToFlower_Keep()),waitMs(1000)),
+                waitMs(1000),
                 follow(follower, FlowerToScore_Backward()),
-                waitMs(400),
+                waitMs(600),
                 follow(follower, FlowerToScore()),
-                waitMs(200).with(Intake_Boost).with(Flower_OFF),
+                waitMs(200).with(Intake_Shoot).with(Flower_OFF),
                 Shoot_pollen,
                 waitMs(1000),
-                follow(follower, ScoreToAllies()).with(Close_pollen),
-                waitMs(600),
-                follow(follower, AlliesToScore()),
-                waitMs(200).with(Intake_Boost),
-                Shoot_pollen,
-                waitMs(400),
-
-                follow(follower, ScoreToFlower2_Turn()).with(Close_pollen),
-                Flower_ON,
-                waitMs(400),
-                race( follow(follower, ScoreToFlower2_Keep()),waitMs(1000)),
-                waitMs(600),
-                follow(follower, Flower2ToScore()).with(Power_shoot_2),
-                waitMs(200).with(Intake_Boost),
-                Shoot_pollen,
-                waitMs(400).with(Flower_OFF),
                 follow(follower, ScoreTo_Park()).with(Close_pollen)
         );
     }
@@ -199,7 +157,7 @@ public class Auto_Garden_Red_Allies extends OpMode {
 
     @Override
     public void loop() {
-        dis = distance.Pythagoras(follower.pose().x(),follower.pose().y(),follower.pose().heading(), Distance.Goal.Red_Garden_Blue_Human,check_Turret_Red,offset,offset);
+        dis = distance.Pythagoras(follower.pose().x(),follower.pose().y(),follower.pose().heading(),Goal,check_Turret_Red,offset,offset);
 
         FSM_shooter_pollen.update_state();
 //        FSM_shooter_nectar.update_state();

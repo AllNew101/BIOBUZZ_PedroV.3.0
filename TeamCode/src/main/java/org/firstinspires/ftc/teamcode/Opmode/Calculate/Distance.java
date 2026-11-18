@@ -52,6 +52,7 @@ public class Distance {
 
         Theta = Math.round(Math.toDegrees(Math.atan2(deltaY,deltaX))); // Radian to Degree
         robot =  Math.round(Math.toDegrees(robot_theta)); // Radian to Degree ** .round = ปัดเศษ
+        Target_Theta = AngleUnit.normalizeDegrees(Theta - robot);
 
         if (Target_Theta > Max_theta){Target_Theta = Max_theta;}
         else if (Target_Theta < Min_theta) {Target_Theta = Min_theta;}
@@ -80,7 +81,6 @@ public class Distance {
 }
 
 
-//        Target_Theta = AngleUnit.normalizeDegrees(Theta - robot);
 //        Target_Theta_nectar = AngleUnit.normalizeDegrees(Theta - robot);
 
 

@@ -34,9 +34,9 @@ public class Config_Tuning {
     @Config
     public static class Shooter_Pollen { // Yellow_ball
         public static double kd = 0;
-        public static double kf = 0.0004098361;
+        public static double kf = 0.0003731343;
         public static double ki = 0;
-        public static double kp = 0.008;
+        public static double kp = 0.0088;
 
     }
     @Config
@@ -54,12 +54,12 @@ public class Config_Tuning {
     public static class FSM_Shooter {
         public static double far = 800;
         public static double mid_pollen = 1040;
-        public static double mid_nectar = 1600;
+        public static double mid_nectar = 1580;
         public static double power = 0.5;
     }
     @Config
     public static class Intake {
-        public static double Intake_Boost = 0.7;
+        public static double Intake_Boost = 0.8;
         public static double Intake_In = 1;
         public static double Intake_Out = -0.8;
         public static double Intake_Shoot = 0.5;
