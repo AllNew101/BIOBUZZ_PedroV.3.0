@@ -36,15 +36,14 @@ public class Config_Tuning {
         public static double kd = 0;
         public static double kf = 0.0003731343;
         public static double ki = 0;
-        public static double kp = 0.0088;
-
+        public static double kp = 0.0065;
     }
     @Config
     public static class Shooter_Nectar { // Color_ball
         public static double kd = 0;
         public static double kf = 0.0003496503;
         public static double ki = 0;
-        public static double kp = 0.01;
+        public static double kp = 0.011;
     }
     @Config
     public static class FSM_Turret {

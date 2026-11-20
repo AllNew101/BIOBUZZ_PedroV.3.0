@@ -1,16 +1,27 @@
 package org.firstinspires.ftc.teamcode.Opmode.Teleop;
 
 
+import static com.pedropathing.api.Paths.line;
+import static com.pedropathing.ivy.groups.Groups.race;
+import static com.pedropathing.ivy.pedro.PedroCommands.follow;
+import static com.pedropathing.ivy.pedro.PedroCommands.hold;
+
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
+import com.pedropathing.api.Paths;
+import com.pedropathing.api.PoseFactory;
 import com.pedropathing.follower.Follower;
+import com.pedropathing.ivy.Command;
+import com.pedropathing.ivy.Scheduler;
 import com.pedropathing.math.Pose;
+import com.pedropathing.paths.Path;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -85,9 +96,14 @@ public class Drive extends OpMode {
     boolean check_intake_boost = false;
     boolean check_Turret_Red = true;
     boolean check_ps2 = true;
+    boolean check_ps1 = true;
+    boolean lock = false;
 
     double[] dis ;
 
+    Boolean Is_driving = false;
+    PoseFactory poseFactory = PoseFactory.degrees();
+    Command Locking;
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -130,26 +146,46 @@ public class Drive extends OpMode {
 
         follower = Constants.create(hardwareMap);
         follower.setPose(new Pose(57,-135,Math.toRadians(90)));
-//        follower.setPose(new Pose(84,-84,Math.toRadians(90)));
+//        follower.setPose(new Pose(63,-9,Math.toRadians(90)));
         follower.update();
+        Scheduler.reset();
     }
     ////////////////////////////////////////////////////////////////////////////////////////////////
     @Override
     public void start() {
         FSM_shooter_pollen.command(FSM_Shooter_pollen.Current_State.Stop);
-        FSM_shooter_nectar.command(FSM_Shooter_nectar.Current_State.Stop);}
+        FSM_shooter_nectar.command(FSM_Shooter_nectar.Current_State.Stop);
+    }
+
     @Override
     public void loop() {
 
         // DRIVE
-        motorFL.setPower(-gamepad1.left_stick_y + gamepad1.left_stick_x + gamepad1.right_stick_x);
-        motorFR.setPower(-gamepad1.left_stick_y - gamepad1.left_stick_x - gamepad1.right_stick_x);
-        motorRL.setPower(-gamepad1.left_stick_y - gamepad1.left_stick_x + gamepad1.right_stick_x);
-        motorRR.setPower(-gamepad1.left_stick_y + gamepad1.left_stick_x - gamepad1.right_stick_x);
-//        double forward = -gamepad1.left_stick_y;
-//        double lateral = -gamepad1.left_stick_x;
-//        double turn = -gamepad1.right_stick_x;
-//        follower.manual(forward, lateral, turn);
+        if (!lock){
+            double forward = -gamepad1.left_stick_y;
+            double lateral = -gamepad1.left_stick_x;
+            double turn = -gamepad1.right_stick_x;
+            follower.manual(forward, lateral, turn);}
+
+        if (Math.abs(gamepad1.left_stick_x) + Math.abs(gamepad1.left_stick_y) + Math.abs(gamepad1.right_stick_x) > 0){
+            Is_driving = true;}
+        else{ Is_driving = false;}
+
+        if (gamepad1.ps && check_ps1) {
+            Locking = hold(follower, new Pose(follower.pose().x(),follower.pose().y(),follower.pose().heading() + Math.toRadians(dis[3])));
+            Scheduler.schedule(Locking);
+            lock = true;
+            check_ps1 = false;}
+        else if (!gamepad1.ps) {check_ps1 = true;}
+        if (lock && Is_driving){
+            if (Locking != null){Locking.cancel();}
+            Locking = null;
+            lock = false;}
+//        motorFL.setPower(-gamepad1.left_stick_y + gamepad1.left_stick_x + gamepad1.right_stick_x);
+//        motorFR.setPower(-gamepad1.left_stick_y - gamepad1.left_stick_x - gamepad1.right_stick_x);
+//        motorRL.setPower(-gamepad1.left_stick_y - gamepad1.left_stick_x + gamepad1.right_stick_x);
+//        motorRR.setPower(-gamepad1.left_stick_y + gamepad1.left_stick_x - gamepad1.right_stick_x);
+
 
         // CLOSER
             // POLLEN/NECTAR
@@ -307,6 +343,7 @@ public class Drive extends OpMode {
         telemetryX.update();
         FSM_turret.update_state(gamepad2.left_stick_x,dis);
         follower.update();
+        Scheduler.execute();
             drawing.draw(packet.fieldOverlay(),follower.pose());
             packet = new TelemetryPacket(false);
             FtcDashboard.getInstance().sendTelemetryPacket(packet);
@@ -325,12 +362,15 @@ public class Drive extends OpMode {
                 telemetryX.addData("theta_target",(dis[1]),TelemetryX.Target.BOTH);
                 telemetryX.addData("X",follower.pose().x(),TelemetryX.Target.BOTH);
                 telemetryX.addData("Y",follower.pose().y(),TelemetryX.Target.BOTH);
-                telemetryX.addData("theta_robot",Math.toDegrees(follower.pose().heading()),TelemetryX.Target.BOTH);
+                telemetryX.addData("Heading_robot",Math.toDegrees(follower.pose().heading()),TelemetryX.Target.BOTH);
                 telemetryX.addData("offset_human",offset_human,TelemetryX.Target.BOTH);
                 telemetryX.addData("offset_garden",offset_garden,TelemetryX.Target.BOTH);
                 telemetryX.addData("TX",limelight.get_x(),TelemetryX.Target.BOTH);
                 telemetryX.addData("TY",limelight.get_y(distance.pythagoras_limelight(follower.pose().x(),follower.pose().y(),follower.pose().heading())),TelemetryX.Target.BOTH);
                 telemetryX.addData("Intake_shoot",offset_intake + Config_Tuning.Intake.Intake_Shoot, TelemetryX.Target.BOTH);
+                telemetryX.addData("Check-Red",check_Turret_Red, TelemetryX.Target.BOTH);
+                telemetryX.addData("Lock_status",Locking, TelemetryX.Target.BOTH);
+                telemetryX.addData("Lock_target",follower.pose().heading() + Math.toRadians(dis[1]), TelemetryX.Target.BOTH);
 
 
         }

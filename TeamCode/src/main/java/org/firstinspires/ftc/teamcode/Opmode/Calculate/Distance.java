@@ -21,7 +21,7 @@ public class Distance {
     double Gear_ratio = 3; // 3:1
     double maximum_servo = 355;
 
-    public double distance,deltaX,deltaY,Target_Theta,Target_Theta_Servo,Theta,robot;
+    public double distance,deltaX,deltaY,Target_Theta,Target_Theta_Servo,Theta,robot,Target_Theta_Locking;
     public void init (ElapsedTime elapsedTime){
         time = elapsedTime;}
 
@@ -37,29 +37,31 @@ public class Distance {
             if (Check_red) { // Red_Garden
                 deltaX = Red_Goal_1[0] - X;
                 deltaY = Red_Goal_1[1] - Y;
-            }else {  // Blue_Garden
-                deltaX = Blue_Goal_2[0] - X;
-                deltaY = Blue_Goal_2[1] - Y;}
+            }else {  // Blue_Human
+                deltaX = Blue_Goal_1[0] - X;
+                deltaY = Blue_Goal_1[1] - Y;}
             distance = Math.hypot(deltaX, deltaY);// c^2 = a^2 + b^2
         }else if (goal == Goal.Red_Human_Blue_Garden) {
             if (Check_red) { // Red_Human
                 deltaX = Red_Goal_2[0] - X;
                 deltaY = Red_Goal_2[1] - Y;
-            } else {  // Blue_Human
-                deltaX = Blue_Goal_1[0] - X;
-                deltaY = Blue_Goal_1[1] - Y;}
+            } else {  // Blue_Garden
+                deltaX = Blue_Goal_2[0] - X;
+                deltaY = Blue_Goal_2[1] - Y;}
             distance = Math.hypot(deltaX,deltaY);}// c^2 = a^2 + b^2
 
         Theta = Math.round(Math.toDegrees(Math.atan2(deltaY,deltaX))); // Radian to Degree
         robot =  Math.round(Math.toDegrees(robot_theta)); // Radian to Degree ** .round = ปัดเศษ
         Target_Theta = AngleUnit.normalizeDegrees(Theta - robot);
+        Target_Theta_Locking = AngleUnit.normalizeDegrees(Theta - robot);
+
 
         if (Target_Theta > Max_theta){Target_Theta = Max_theta;}
         else if (Target_Theta < Min_theta) {Target_Theta = Min_theta;}
         if (Y <= -72){Target_Theta_Servo = degree_to_Servo(Target_Theta - offset_garden);}
         else {Target_Theta_Servo = degree_to_Servo(Target_Theta - offset_human);}
 
-        double[] pythagoras = {distance,Target_Theta,Target_Theta_Servo};
+        double[] pythagoras = {distance,Target_Theta,Target_Theta_Servo,Target_Theta_Locking};
         return pythagoras;
     }
 

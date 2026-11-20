@@ -55,10 +55,10 @@ public class Auto_Garden_Red_Allies extends OpMode {
     double[] dis;
 
     // Poses
-    private final Pose startPose = poseFactory.of(57, -9, 270);
+    private final Pose startPose = poseFactory.of(63, -9, 270);
     private final Pose scorePose = poseFactory.of(57, -16, 270);
 
-    private final Pose Flower1_Turn = poseFactory.of(48, -22, 90);
+    private final Pose Flower1_Turn = poseFactory.of(48, -26, 90);
     private final Pose Flower1_Keep = poseFactory.of(48, -13, 90);
 
     private final Pose scorePose2_Backward = poseFactory.of(50, -26, 90);
@@ -97,7 +97,7 @@ public class Auto_Garden_Red_Allies extends OpMode {
         return sequential(
                 parallel(Turret_ON,Power_shoot_1,Shooter_Pollen_ON,Close_pollen,Human_Goal),
                 follow(follower, startToScore()).with(Intake_Shoot),
-                waitMs(3000), // Delay_Wait_Allies
+                waitMs(6000), // Delay_Wait_Allies
                 Shoot_pollen,
                 waitMs(800),
                 parallel(Close_pollen,Intake_In),

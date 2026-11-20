@@ -48,21 +48,21 @@ public class Auto_Garden_Blue_Allies extends OpMode {
     ElapsedTime time;
     Servo flower2;
 
-    boolean check_Turret_Red = true;
+    boolean check_Turret_Red = false;
     double offset = 0;
     Distance.Goal Goal;
     double[] dis;
 
     // Poses
-    private final Pose startPose = poseFactory.of(87, -135, 90);
-    private final Pose scorePose = poseFactory.of(87, -128, 90);
+    private final Pose startPose = poseFactory.of(81, -135, 90);
+    private final Pose scorePose = poseFactory.of(88, -128, 90);
 
-    private final Pose Flower1_Turn = poseFactory.of(96, -120, 270);
+    private final Pose Flower1_Turn = poseFactory.of(96, -116, 270);
     private final Pose Flower1_Keep = poseFactory.of(96, -130, 270);
 
     private final Pose scorePose2_Backward = poseFactory.of(96, -118, 270);
     private final Pose scorePose2 = poseFactory.of(96, -128, 90);
-    private final Pose Park = poseFactory.of(134, -114, 270);
+    private final Pose Park = poseFactory.of(134, -120, 90);
 
     // Path methods
     private Path startToScore() {return line(startPose, scorePose).linear(startPose, scorePose);}
@@ -97,7 +97,7 @@ public class Auto_Garden_Blue_Allies extends OpMode {
         return sequential(
                 parallel(Turret_ON,Power_shoot_1,Shooter_Pollen_ON,Close_pollen,Human_Goal),
                 follow(follower, startToScore()).with(Intake_Shoot),
-                waitMs(3000), // Delay_Wait_Allies
+                waitMs(6000), // Delay_Wait_Allies
                 Shoot_pollen,
                 waitMs(800),
                 parallel(Close_pollen,Intake_In),

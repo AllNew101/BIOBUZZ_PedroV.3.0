@@ -67,17 +67,17 @@ public class Auto_Garden_Red extends OpMode {
     private final Pose Flower1_Turn = poseFactory.of(48, -22, 90);
     private final Pose Flower1_Keep = poseFactory.of(48, -13, 90);
     private final Pose scorePose3_Backward = poseFactory.of(50, -26, 90);
-    private final Pose scorePose3 = poseFactory.of(50, -16, 270);
+    private final Pose scorePose3 = poseFactory.of(50, -14, 270);
 
     private final Pose Flower2_Turn_ControlPoint = poseFactory.of(17, -44, 0);
     private final Pose Flower2_Turn_ControlPoint2 = poseFactory.of(50, -98, 180);
     private final Pose Flower2_Turn = poseFactory.of(30, -94, 180);
-    private final Pose Flower2_Keep = poseFactory.of(16, -94, 180);
+    private final Pose Flower2_Keep = poseFactory.of(14, -94, 180);
 
     private final Pose scorePose4 = poseFactory.of(50, -16, 270);
 //    private final Pose Park_ControlPoint = poseFactory.of(17, -114, 0);
 //    private final Pose Park_ControlPoint2 = poseFactory.of(9, -73, 0);
-    private final Pose Park = poseFactory.of(12, -30, 270);
+    private final Pose Park = poseFactory.of(12, -20, 270);
 
     // Path methods
     private Path startToScore() {return line(startPose, scorePose).linear(startPose, scorePose);}
@@ -107,7 +107,7 @@ public class Auto_Garden_Red extends OpMode {
     Command Flower_ON = instant(() -> flower2.setPosition(1));
     Command Flower_OFF = instant(() -> flower2.setPosition(0.25));
     Command Power_shoot_1 = instant(() -> Config_Tuning.FSM_Shooter.mid_pollen = 1045);
-    Command Power_shoot_2 = instant(() -> Config_Tuning.FSM_Shooter.mid_pollen = 1030);
+    Command Power_shoot_2 = instant(() -> Config_Tuning.FSM_Shooter.mid_pollen = 1035);
     Command Power_shoot_3 = instant(() -> Config_Tuning.FSM_Shooter.mid_pollen = 1040);
     Command Offset_1 = instant(() -> offset = -4);
     Command Offset_2 = instant(() -> offset = -6);
