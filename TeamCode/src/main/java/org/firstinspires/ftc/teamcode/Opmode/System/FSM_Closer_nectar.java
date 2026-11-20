@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.Opmode.System;
 
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.Opmode.Config_Tuning;
 
@@ -10,12 +11,18 @@ public class FSM_Closer_nectar {
     public void command(FSM_Intake.Current_State currentState) {
     }
 
-    public enum Current_State{Close,Open}
+    public enum Current_State{Close,Open,Macro_Shoot}
     Servo closer_nectar;
     Current_State current_state;
+    ElapsedTime time;
+    double previous_time,delta_time;
+    boolean macro_on;
+    boolean check_time = true;
 
-    public void init (HardwareMap hardwareMap){
+    public void init (HardwareMap hardwareMap , ElapsedTime Time){
         closer_nectar = hardwareMap.get(Servo.class,"Closer_nectar");
+        time = Time;
+        previous_time = time.milliseconds();
     }
 
     public void command(Current_State state){
@@ -29,6 +36,7 @@ public class FSM_Closer_nectar {
         switch (current_state){
             case Close:
                 closer_nectar.setPosition(close_nectar);
+                check_time = true;
                 break;
             case Open:
                 closer_nectar.setPosition(open_nectar);

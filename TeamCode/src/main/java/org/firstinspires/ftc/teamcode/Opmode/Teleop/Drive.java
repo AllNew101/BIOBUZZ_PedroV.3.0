@@ -96,8 +96,12 @@ public class Drive extends OpMode {
     boolean check_intake_boost = false;
     boolean check_Turret_Red = true;
     boolean check_ps2 = true;
-    boolean check_ps1 = true;
+    boolean check_triangle = true;
     boolean lock = false;
+    boolean check_delay_lock = true;
+    double Delay_Macro,previous_time_delay;
+    double offset_lock_garden = 0; // red
+    double offset_lock_human = 0; // red
 
     double[] dis ;
 
@@ -137,7 +141,7 @@ public class Drive extends OpMode {
         FSM_shooter_nectar.init(hardwareMap,time);
         FSM_intake.init(hardwareMap);
         FSM_closer_pollen.init(hardwareMap);
-        FSM_closer_nectar.init(hardwareMap);
+        FSM_closer_nectar.init(hardwareMap,time);
         FSM_turret.init(hardwareMap,time);
         distance.init(time);
         limelight.init(hardwareMap);
@@ -167,20 +171,39 @@ public class Drive extends OpMode {
             double turn = -gamepad1.right_stick_x;
             follower.manual(forward, lateral, turn);}
 
-        if (Math.abs(gamepad1.left_stick_x) + Math.abs(gamepad1.left_stick_y) + Math.abs(gamepad1.right_stick_x) > 0){
+        if (follower.pose().y() <= -72) {// Human_red
+            offset_lock_human += gamepad2.right_stick_x * 0.4;
+        }else{
+            offset_lock_garden += gamepad2.right_stick_x * 0.4;}
+
+        if (Math.abs(gamepad1.left_stick_x) + Math.abs(gamepad1.left_stick_y) + Math.abs(gamepad1.right_stick_x) > 0.1){
             Is_driving = true;}
         else{ Is_driving = false;}
 
-        if (gamepad1.ps && check_ps1) {
-            Locking = hold(follower, new Pose(follower.pose().x(),follower.pose().y(),follower.pose().heading() + Math.toRadians(dis[3])));
-            Scheduler.schedule(Locking);
+        if (gamepad1.triangle && check_triangle) {
             lock = true;
-            check_ps1 = false;}
-        else if (!gamepad1.ps) {check_ps1 = true;}
+            check_triangle = false;
+            previous_time_delay = time.milliseconds();}
+        else if (!gamepad1.triangle) {check_triangle = true;}
+
+        if (lock){
+            if (follower.pose().y() <= -72) {
+                Locking = hold(follower, new Pose(follower.pose().x(),follower.pose().y(),follower.pose().heading() + Math.toRadians(dis[3] - offset_lock_human)));}
+            else {
+                Locking = hold(follower, new Pose(follower.pose().x(),follower.pose().y(),follower.pose().heading() + Math.toRadians(dis[3] - offset_lock_garden)));}
+            Scheduler.schedule(Locking);
+        }
+        if (check_delay_lock && lock){
+            Delay_Macro = time.milliseconds() - previous_time_delay;
+            if (Delay_Macro >= 1000){
+                check_closer_pollen = true;
+                check_delay_lock = false;}
+        }
         if (lock && Is_driving){
             if (Locking != null){Locking.cancel();}
             Locking = null;
-            lock = false;}
+            lock = false;
+            check_delay_lock = true;}
 //        motorFL.setPower(-gamepad1.left_stick_y + gamepad1.left_stick_x + gamepad1.right_stick_x);
 //        motorFR.setPower(-gamepad1.left_stick_y - gamepad1.left_stick_x - gamepad1.right_stick_x);
 //        motorRL.setPower(-gamepad1.left_stick_y - gamepad1.left_stick_x + gamepad1.right_stick_x);
@@ -200,7 +223,7 @@ public class Drive extends OpMode {
             FSM_intake.command(FSM_Intake.Current_State.shoot);// Intake
             RGB.setPosition(0.3);
             check_intake_shoot = true;
-        }else {
+        }else{
             FSM_closer_pollen.command(FSM_Closer_pollen.Current_State.Close);
             FSM_closer_nectar.command(FSM_Closer_nectar.Current_State.Close);
             RGB.setPosition(0.5);
@@ -369,9 +392,8 @@ public class Drive extends OpMode {
                 telemetryX.addData("TY",limelight.get_y(distance.pythagoras_limelight(follower.pose().x(),follower.pose().y(),follower.pose().heading())),TelemetryX.Target.BOTH);
                 telemetryX.addData("Intake_shoot",offset_intake + Config_Tuning.Intake.Intake_Shoot, TelemetryX.Target.BOTH);
                 telemetryX.addData("Check-Red",check_Turret_Red, TelemetryX.Target.BOTH);
-                telemetryX.addData("Lock_status",Locking, TelemetryX.Target.BOTH);
-                telemetryX.addData("Lock_target",follower.pose().heading() + Math.toRadians(dis[1]), TelemetryX.Target.BOTH);
-
+                telemetryX.addData("offset_lock_garden",offset_lock_garden, TelemetryX.Target.BOTH);
+                telemetryX.addData("offset_lock_human",offset_lock_human, TelemetryX.Target.BOTH);
 
         }
     }
