@@ -56,28 +56,30 @@ public class Auto_Garden_Blue extends OpMode {
 
     // Poses
     private final Pose startPose = poseFactory.of(87, -9, 270);
-    private final Pose scorePose = poseFactory.of(87, -14, 270);
-    private final Pose GardenPose_ControlPoint = poseFactory.of(90, -4, 0);
+    private final Pose scorePose = poseFactory.of(87, -15, 270);
+    private final Pose GardenPose_ControlPoint = poseFactory.of(90, -9, 0);
     private final Pose GardenPose = poseFactory.of(135, -10, 0);
 
     private final Pose scorePose2_ControlPoint = poseFactory.of(116, -35, 0);
     private final Pose scorePose2_ControlPoint2 = poseFactory.of(127, -100, 0);
-    private final Pose scorePose2 = poseFactory.of(96, -128, 90);
+    private final Pose scorePose2 = poseFactory.of(100, -123, 90);
 
     private final Pose Flower1_Turn = poseFactory.of(96, -120, 270);
     private final Pose Flower1_Keep = poseFactory.of(96, -130, 270);
     private final Pose scorePose3_Backward = poseFactory.of(96, -118, 270);
-    private final Pose scorePose3 = poseFactory.of(96, -130, 90);
+    private final Pose scorePose3 = poseFactory.of(100, -123, 90);
 
     private final Pose Flower2_Turn_ControlPoint = poseFactory.of(127, -100, 0);
     private final Pose Flower2_Turn_ControlPoint2 = poseFactory.of(94, -46, 180);
     private final Pose Flower2_Turn = poseFactory.of(116, -50, 0);
     private final Pose Flower2_Keep = poseFactory.of(130, -50, 0);
 
-    private final Pose scorePose4 = poseFactory.of(96, -128, 90);
+    private final Pose scorePose4 = poseFactory.of(100, -123, 90);
+    private final Pose Park = poseFactory.of(134, -120, 90);
+//    private final Pose scorePose4 = poseFactory.of(92, -20, 270);
 //    private final Pose Park_ControlPoint = poseFactory.of(127, -30, 0);
 //    private final Pose Park_ControlPoint2 = poseFactory.of(135, -71, 0);
-    private final Pose Park = poseFactory.of(134, -120, 90);
+//    private final Pose Park = poseFactory.of(134, -94, 270);
 
     // Path methods
     private Path startToScore() {return line(startPose, scorePose).linear(startPose, scorePose);}
@@ -106,9 +108,9 @@ public class Auto_Garden_Blue extends OpMode {
     Command Turret_OFF = instant(() -> FSM_turret.command(FSM_Turret.Current_State.M0));
     Command Flower_ON = instant(() -> flower2.setPosition(1));
     Command Flower_OFF = instant(() -> flower2.setPosition(0.25));
-    Command Power_shoot_1 = instant(() -> Config_Tuning.FSM_Shooter.mid_pollen = 1045);
-    Command Power_shoot_2 = instant(() -> Config_Tuning.FSM_Shooter.mid_pollen = 1035);
-    Command Power_shoot_3 = instant(() -> Config_Tuning.FSM_Shooter.mid_pollen = 1040);
+    Command Power_shoot_1 = instant(() -> Config_Tuning.FSM_Shooter.mid_pollen = 1040); // 1
+    Command Power_shoot_2 = instant(() -> Config_Tuning.FSM_Shooter.mid_pollen = 1040); // 2,3
+    Command Power_shoot_3 = instant(() -> Config_Tuning.FSM_Shooter.mid_pollen = 1040); // 4
     Command Offset_1 = instant(() -> offset = 4);
     Command Offset_2 = instant(() -> offset = 6);
     Command Garden_Goal = instant(() -> Goal = Distance.Goal.Red_Human_Blue_Garden); // Blue
@@ -212,7 +214,15 @@ public class Auto_Garden_Blue extends OpMode {
         telemetryX.addData("Heading", Math.toDegrees(follower.pose().heading()));
         telemetryX.addData("Follower Mode", follower.mode());
         telemetryX.update();
+    }
 
+    // in your autonomous
+
+
+    @Override
+    public void stop() {
+        Auto_End_Pose.End_Auto_Blue = follower.pose();
+        Auto_End_Pose.Start_Pose = Auto_End_Pose.Start_pose.End_Blue;
     }
 
 }

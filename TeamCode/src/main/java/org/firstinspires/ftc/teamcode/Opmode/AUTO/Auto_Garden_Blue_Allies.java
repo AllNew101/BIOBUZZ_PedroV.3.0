@@ -179,4 +179,9 @@ public class Auto_Garden_Blue_Allies extends OpMode {
 
     }
 
+    @Override
+    public void stop() {
+        Auto_End_Pose.End_Auto_Blue_Allies = follower.pose();
+        Auto_End_Pose.Start_Pose = Auto_End_Pose.Start_pose.End_Blue_Allies;
+    }
 }

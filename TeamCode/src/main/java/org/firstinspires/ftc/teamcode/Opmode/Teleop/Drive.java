@@ -25,6 +25,7 @@ import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.teamcode.Opmode.AUTO.Auto_End_Pose;
 import org.firstinspires.ftc.teamcode.Opmode.Calculate.Distance;
 import org.firstinspires.ftc.teamcode.Opmode.Calculate.lime_light;
 import org.firstinspires.ftc.teamcode.Opmode.Config_Tuning;
@@ -76,14 +77,14 @@ public class Drive extends OpMode {
     boolean check_triggerR = true;
     boolean check_closer_pollen = false;
     boolean check_bumperR = true;
-    boolean check_shoot_pollen = false;
+    boolean check_shoot_pollen = true;
     boolean check_triangle2 = true;
-    boolean check_shoot_nectar = false;
+    boolean check_shoot_nectar = true;
     boolean check_dpadL2 = true;
     boolean check_dpadR2 = true;
     int state_turret_manual = 2;
     boolean check_square = true;
-    boolean check_turret = false;
+    boolean check_turret = true;
     boolean check_bumperR2 = true;
     boolean check_bumperL2 = true;
     boolean check_triggerR2 = true;
@@ -141,7 +142,7 @@ public class Drive extends OpMode {
         FSM_shooter_nectar.init(hardwareMap,time);
         FSM_intake.init(hardwareMap);
         FSM_closer_pollen.init(hardwareMap);
-        FSM_closer_nectar.init(hardwareMap,time);
+        FSM_closer_nectar.init(hardwareMap);
         FSM_turret.init(hardwareMap,time);
         distance.init(time);
         limelight.init(hardwareMap);
@@ -149,9 +150,6 @@ public class Drive extends OpMode {
         telemetryX.clear();
 
         follower = Constants.create(hardwareMap);
-        follower.setPose(new Pose(57,-135,Math.toRadians(90)));
-//        follower.setPose(new Pose(63,-9,Math.toRadians(90)));
-        follower.update();
         Scheduler.reset();
     }
     ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -159,6 +157,29 @@ public class Drive extends OpMode {
     public void start() {
         FSM_shooter_pollen.command(FSM_Shooter_pollen.Current_State.Stop);
         FSM_shooter_nectar.command(FSM_Shooter_nectar.Current_State.Stop);
+        switch (Auto_End_Pose.Start_Pose) {
+            case Default:
+                follower.setPose(Auto_End_Pose.Default_Start);
+                check_Turret_Red = true;
+                break;
+            case End_Red:
+                follower.setPose(Auto_End_Pose.End_Auto_Red);
+                check_Turret_Red = true;
+                break;
+            case End_Red_Allies:
+                follower.setPose(Auto_End_Pose.End_Auto_Red_Allies);
+                check_Turret_Red = true;
+                break;
+            case End_Blue:
+                follower.setPose(Auto_End_Pose.End_Auto_Blue);
+                check_Turret_Red = false;
+                break;
+            case End_Blue_Allies:
+                follower.setPose(Auto_End_Pose.End_Auto_Blue_Allies);
+                check_Turret_Red = false;
+                break;
+        }
+        follower.update();
     }
 
     @Override
@@ -192,13 +213,16 @@ public class Drive extends OpMode {
             else {
                 Locking = hold(follower, new Pose(follower.pose().x(),follower.pose().y(),follower.pose().heading() + Math.toRadians(dis[3] - offset_lock_garden)));}
             Scheduler.schedule(Locking);
+            if (follower.pose().heading() + Math.toRadians(-2) <= follower.pose().heading() + Math.toRadians(dis[3] - offset_lock_garden) && follower.pose().heading() + Math.toRadians(2) >= follower.pose().heading() + Math.toRadians(dis[3] - offset_lock_garden)) {
+                if (check_delay_lock){
+                    Delay_Macro = time.milliseconds() - previous_time_delay;
+                    if (Delay_Macro >= 250){
+                        check_closer_pollen = true;
+                        check_delay_lock = false;}
+                }
+            }
         }
-        if (check_delay_lock && lock){
-            Delay_Macro = time.milliseconds() - previous_time_delay;
-            if (Delay_Macro >= 1000){
-                check_closer_pollen = true;
-                check_delay_lock = false;}
-        }
+
         if (lock && Is_driving){
             if (Locking != null){Locking.cancel();}
             Locking = null;
@@ -394,7 +418,7 @@ public class Drive extends OpMode {
                 telemetryX.addData("Check-Red",check_Turret_Red, TelemetryX.Target.BOTH);
                 telemetryX.addData("offset_lock_garden",offset_lock_garden, TelemetryX.Target.BOTH);
                 telemetryX.addData("offset_lock_human",offset_lock_human, TelemetryX.Target.BOTH);
-
+                telemetryX.addData("Start_pose", Auto_End_Pose.Start_Pose, TelemetryX.Target.BOTH);
         }
     }
 }

@@ -179,4 +179,10 @@ public class Auto_Garden_Red_Allies extends OpMode {
 
     }
 
-}
+    @Override
+    public void stop() {
+        Auto_End_Pose.End_Auto_Red_Allies = follower.pose();
+        Auto_End_Pose.Start_Pose = Auto_End_Pose.Start_pose.End_Red_Allies;
+    }
+
+    }

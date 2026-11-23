@@ -62,19 +62,19 @@ public class Auto_Garden_Red extends OpMode {
 
     private final Pose scorePose2_ControlPoint = poseFactory.of(28, -109, 0);
     private final Pose scorePose2_ControlPoint2 = poseFactory.of(17, -44, 0);
-    private final Pose scorePose2 = poseFactory.of(50, -16, 270);
+    private final Pose scorePose2 = poseFactory.of(46, -16, 270);
 
     private final Pose Flower1_Turn = poseFactory.of(48, -22, 90);
     private final Pose Flower1_Keep = poseFactory.of(48, -13, 90);
     private final Pose scorePose3_Backward = poseFactory.of(50, -26, 90);
-    private final Pose scorePose3 = poseFactory.of(50, -14, 270);
+    private final Pose scorePose3 = poseFactory.of(46, -14, 270);
 
     private final Pose Flower2_Turn_ControlPoint = poseFactory.of(17, -44, 0);
     private final Pose Flower2_Turn_ControlPoint2 = poseFactory.of(50, -98, 180);
     private final Pose Flower2_Turn = poseFactory.of(30, -94, 180);
     private final Pose Flower2_Keep = poseFactory.of(14, -94, 180);
 
-    private final Pose scorePose4 = poseFactory.of(50, -16, 270);
+    private final Pose scorePose4 = poseFactory.of(46, -16, 270);
 //    private final Pose Park_ControlPoint = poseFactory.of(17, -114, 0);
 //    private final Pose Park_ControlPoint2 = poseFactory.of(9, -73, 0);
     private final Pose Park = poseFactory.of(12, -20, 270);
@@ -106,9 +106,9 @@ public class Auto_Garden_Red extends OpMode {
     Command Turret_OFF = instant(() -> FSM_turret.command(FSM_Turret.Current_State.M0));
     Command Flower_ON = instant(() -> flower2.setPosition(1));
     Command Flower_OFF = instant(() -> flower2.setPosition(0.25));
-    Command Power_shoot_1 = instant(() -> Config_Tuning.FSM_Shooter.mid_pollen = 1045);
-    Command Power_shoot_2 = instant(() -> Config_Tuning.FSM_Shooter.mid_pollen = 1035);
-    Command Power_shoot_3 = instant(() -> Config_Tuning.FSM_Shooter.mid_pollen = 1040);
+    Command Power_shoot_1 = instant(() -> Config_Tuning.FSM_Shooter.mid_pollen = 1045); // 1
+    Command Power_shoot_2 = instant(() -> Config_Tuning.FSM_Shooter.mid_pollen = 1035); // 2,3
+    Command Power_shoot_3 = instant(() -> Config_Tuning.FSM_Shooter.mid_pollen = 1040); // 4
     Command Offset_1 = instant(() -> offset = -4);
     Command Offset_2 = instant(() -> offset = -6);
     Command Garden_Goal = instant(() -> Goal = Distance.Goal.Red_Garden_Blue_Human); // Red
@@ -212,7 +212,12 @@ public class Auto_Garden_Red extends OpMode {
         telemetryX.addData("Heading", Math.toDegrees(follower.pose().heading()));
         telemetryX.addData("Follower Mode", follower.mode());
         telemetryX.update();
+    }
 
+    @Override
+    public void stop() {
+        Auto_End_Pose.End_Auto_Red = follower.pose();
+        Auto_End_Pose.Start_Pose = Auto_End_Pose.Start_pose.End_Red;
     }
 
 }
