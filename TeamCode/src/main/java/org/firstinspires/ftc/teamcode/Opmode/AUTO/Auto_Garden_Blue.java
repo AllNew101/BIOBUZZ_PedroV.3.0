@@ -62,12 +62,12 @@ public class Auto_Garden_Blue extends OpMode {
 
     private final Pose scorePose2_ControlPoint = poseFactory.of(116, -35, 0);
     private final Pose scorePose2_ControlPoint2 = poseFactory.of(127, -100, 0);
-    private final Pose scorePose2 = poseFactory.of(104, -123, 90);
+    private final Pose scorePose2 = poseFactory.of(100, -123, 90);
 
     private final Pose Flower1_Turn = poseFactory.of(96, -120, 270);
     private final Pose Flower1_Keep = poseFactory.of(96, -130, 270);
     private final Pose scorePose3_Backward = poseFactory.of(96, -118, 270);
-    private final Pose scorePose3 = poseFactory.of(104, -123, 90);
+    private final Pose scorePose3 = poseFactory.of(100, -123, 90);
 
     private final Pose Flower2_Turn_ControlPoint = poseFactory.of(127, -100, 0);
     private final Pose Flower2_Turn_ControlPoint2 = poseFactory.of(94, -46, 180);
@@ -76,7 +76,7 @@ public class Auto_Garden_Blue extends OpMode {
 
 //    private final Pose scorePose4 = poseFactory.of(100, -123, 90);
 //    private final Pose Park = poseFactory.of(134, -120, 90);
-    private final Pose scorePose4 = poseFactory.of(104, -20, 270);
+    private final Pose scorePose4 = poseFactory.of(96, -18, 270);
     private final Pose Park_ControlPoint = poseFactory.of(127, -30, 0);
     private final Pose Park_ControlPoint2 = poseFactory.of(135, -71, 0);
     private final Pose Park = poseFactory.of(134, -94, 270);
