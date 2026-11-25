@@ -76,7 +76,7 @@ public class Auto_Garden_Blue extends OpMode {
 
 //    private final Pose scorePose4 = poseFactory.of(100, -123, 90);
 //    private final Pose Park = poseFactory.of(134, -120, 90);
-    private final Pose scorePose4 = poseFactory.of(96, -18, 270);
+    private final Pose scorePose4 = poseFactory.of(110, -18, 270);
     private final Pose Park_ControlPoint = poseFactory.of(127, -30, 0);
     private final Pose Park_ControlPoint2 = poseFactory.of(135, -71, 0);
     private final Pose Park = poseFactory.of(134, -94, 270);
@@ -109,9 +109,9 @@ public class Auto_Garden_Blue extends OpMode {
     Command Flower_ON = instant(() -> flower2.setPosition(1));
     Command Flower_OFF = instant(() -> flower2.setPosition(0.25));
     Command Power_shoot_1 = instant(() -> Config_Tuning.FSM_Shooter.mid_pollen = 1040); // 1
-    Command Power_shoot_2 = instant(() -> Config_Tuning.FSM_Shooter.mid_pollen = 1040); // 2,3
-    Command Power_shoot_3 = instant(() -> Config_Tuning.FSM_Shooter.mid_pollen = 1040); // 4
-    Command Offset_1 = instant(() -> offset = 4);
+    Command Power_shoot_2 = instant(() -> Config_Tuning.FSM_Shooter.mid_pollen = 1035); // 2,3
+    Command Power_shoot_3 = instant(() -> Config_Tuning.FSM_Shooter.mid_pollen = 1035); // 4
+    Command Offset_1 = instant(() -> offset = 2);
     Command Offset_2 = instant(() -> offset = 6);
     Command Garden_Goal = instant(() -> Goal = Distance.Goal.Red_Human_Blue_Garden); // Blue
     Command Human_Goal = instant(() -> Goal = Distance.Goal.Red_Garden_Blue_Human); // Blue
@@ -127,7 +127,7 @@ public class Auto_Garden_Blue extends OpMode {
                 race(follow(follower, Garden()),waitMs(1800)),
                 waitMs(600),
                 follow(follower, GardenToScore()).with(Power_shoot_2).with(Human_Goal),
-                waitMs(200).with(Intake_Shoot),
+                waitMs(200).with(Intake_Boost),
                 Shoot_pollen,
                 waitMs(800),
                 follow(follower, ScoreToFlower_Turn()).with(Close_pollen),
@@ -138,7 +138,7 @@ public class Auto_Garden_Blue extends OpMode {
                 follow(follower, FlowerToScore_Backward()),
                 waitMs(600),
                 follow(follower, FlowerToScore()),
-                waitMs(200).with(Intake_Shoot).with(Flower_OFF),
+                waitMs(400).with(Intake_Boost).with(Flower_OFF),
                 Shoot_pollen,
                 waitMs(1000),
                 follow(follower, ScoreToFlower2_Turn()).with(Close_pollen),
@@ -146,8 +146,8 @@ public class Auto_Garden_Blue extends OpMode {
                 waitMs(400),
                 race( follow(follower, ScoreToFlower2_Keep()),waitMs(1000)),
                 waitMs(1200),
-                follow(follower, Flower2ToScore()).with(Power_shoot_3),
-                waitMs(400).with(Intake_Shoot),
+                follow(follower, Flower2ToScore()).with(Power_shoot_3).with(Offset_1),
+                waitMs(400).with(Intake_Boost),
                 Shoot_pollen,
                 waitMs(1000).with(Flower_OFF),
                 follow(follower, ScoreTo_Park()).with(Close_pollen)
