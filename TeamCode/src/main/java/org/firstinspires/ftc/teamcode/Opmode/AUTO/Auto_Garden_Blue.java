@@ -76,7 +76,7 @@ public class Auto_Garden_Blue extends OpMode {
 
 //    private final Pose scorePose4 = poseFactory.of(100, -123, 90);
 //    private final Pose Park = poseFactory.of(134, -120, 90);
-    private final Pose scorePose4 = poseFactory.of(100, -21, 270);
+    private final Pose scorePose4 = poseFactory.of(104, -20, 270);
     private final Pose Park_ControlPoint = poseFactory.of(127, -30, 0);
     private final Pose Park_ControlPoint2 = poseFactory.of(135, -71, 0);
     private final Pose Park = poseFactory.of(134, -94, 270);
@@ -147,7 +147,7 @@ public class Auto_Garden_Blue extends OpMode {
                 race( follow(follower, ScoreToFlower2_Keep()),waitMs(1000)),
                 waitMs(1200),
                 follow(follower, Flower2ToScore()).with(Power_shoot_3),
-                waitMs(200).with(Intake_Shoot),
+                waitMs(400).with(Intake_Shoot),
                 Shoot_pollen,
                 waitMs(1000).with(Flower_OFF),
                 follow(follower, ScoreTo_Park()).with(Close_pollen)
