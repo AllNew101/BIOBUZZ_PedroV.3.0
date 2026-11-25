@@ -62,12 +62,12 @@ public class Auto_Garden_Blue extends OpMode {
 
     private final Pose scorePose2_ControlPoint = poseFactory.of(116, -35, 0);
     private final Pose scorePose2_ControlPoint2 = poseFactory.of(127, -100, 0);
-    private final Pose scorePose2 = poseFactory.of(100, -123, 90);
+    private final Pose scorePose2 = poseFactory.of(100, -126, 90);
 
     private final Pose Flower1_Turn = poseFactory.of(96, -120, 270);
     private final Pose Flower1_Keep = poseFactory.of(96, -130, 270);
     private final Pose scorePose3_Backward = poseFactory.of(96, -118, 270);
-    private final Pose scorePose3 = poseFactory.of(100, -123, 90);
+    private final Pose scorePose3 = poseFactory.of(100, -126, 90);
 
     private final Pose Flower2_Turn_ControlPoint = poseFactory.of(127, -100, 0);
     private final Pose Flower2_Turn_ControlPoint2 = poseFactory.of(94, -46, 180);
@@ -76,7 +76,7 @@ public class Auto_Garden_Blue extends OpMode {
 
 //    private final Pose scorePose4 = poseFactory.of(100, -123, 90);
 //    private final Pose Park = poseFactory.of(134, -120, 90);
-    private final Pose scorePose4 = poseFactory.of(110, -18, 270);
+    private final Pose scorePose4 = poseFactory.of(96, -18, 270);
     private final Pose Park_ControlPoint = poseFactory.of(127, -30, 0);
     private final Pose Park_ControlPoint2 = poseFactory.of(135, -71, 0);
     private final Pose Park = poseFactory.of(134, -94, 270);
@@ -94,7 +94,6 @@ public class Auto_Garden_Blue extends OpMode {
     private Path Flower2ToScore() {return Paths.line(Flower2_Keep,scorePose4).linear(Flower2_Keep,scorePose4);}
 //    private Path ScoreTo_Park(){return Paths.line(scorePose4,Park).linear(scorePose4,Park);}
     private Path ScoreTo_Park(){return Paths.curve(scorePose4, Park_ControlPoint, Park_ControlPoint2, Park).linear(scorePose4,Park);}
-
 
 
     Command Shooter_Pollen_ON = instant(() -> FSM_shooter_pollen.command(FSM_Shooter_pollen.Current_State.Mid));
@@ -146,7 +145,7 @@ public class Auto_Garden_Blue extends OpMode {
                 waitMs(400),
                 race( follow(follower, ScoreToFlower2_Keep()),waitMs(1000)),
                 waitMs(1200),
-                follow(follower, Flower2ToScore()).with(Power_shoot_3).with(Offset_1),
+                follow(follower, Flower2ToScore()).with(Power_shoot_3),
                 waitMs(400).with(Intake_Boost),
                 Shoot_pollen,
                 waitMs(1000).with(Flower_OFF),
