@@ -74,12 +74,12 @@ public class Auto_Garden_Blue extends OpMode {
     private final Pose Flower2_Turn = poseFactory.of(116, -50, 0);
     private final Pose Flower2_Keep = poseFactory.of(130, -50, 0);
 
-    private final Pose scorePose4 = poseFactory.of(100, -123, 90);
-    private final Pose Park = poseFactory.of(134, -120, 90);
-//    private final Pose scorePose4 = poseFactory.of(92, -20, 270);
-//    private final Pose Park_ControlPoint = poseFactory.of(127, -30, 0);
-//    private final Pose Park_ControlPoint2 = poseFactory.of(135, -71, 0);
-//    private final Pose Park = poseFactory.of(134, -94, 270);
+//    private final Pose scorePose4 = poseFactory.of(100, -123, 90);
+//    private final Pose Park = poseFactory.of(134, -120, 90);
+    private final Pose scorePose4 = poseFactory.of(100, -21, 270);
+    private final Pose Park_ControlPoint = poseFactory.of(127, -30, 0);
+    private final Pose Park_ControlPoint2 = poseFactory.of(135, -71, 0);
+    private final Pose Park = poseFactory.of(134, -94, 270);
 
     // Path methods
     private Path startToScore() {return line(startPose, scorePose).linear(startPose, scorePose);}
@@ -92,8 +92,8 @@ public class Auto_Garden_Blue extends OpMode {
     private Path ScoreToFlower2_Turn(){return Paths.curve(scorePose3, Flower2_Turn_ControlPoint, Flower2_Turn_ControlPoint2, Flower2_Turn).linear(scorePose3,Flower2_Turn);}
     private Path ScoreToFlower2_Keep() {return Paths.line(Flower2_Turn, Flower2_Keep).linear(Flower2_Turn, Flower2_Keep);}
     private Path Flower2ToScore() {return Paths.line(Flower2_Keep,scorePose4).linear(Flower2_Keep,scorePose4);}
-    private Path ScoreTo_Park(){return Paths.line(scorePose4,Park).linear(scorePose4,Park);}
-//    private Path ScoreTo_Park(){return Paths.curve(scorePose4, Park_ControlPoint, Park_ControlPoint2, Park).linear(scorePose4,Park);}
+//    private Path ScoreTo_Park(){return Paths.line(scorePose4,Park).linear(scorePose4,Park);}
+    private Path ScoreTo_Park(){return Paths.curve(scorePose4, Park_ControlPoint, Park_ControlPoint2, Park).linear(scorePose4,Park);}
 
 
 

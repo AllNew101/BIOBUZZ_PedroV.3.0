@@ -62,22 +62,24 @@ public class Auto_Garden_Red extends OpMode {
 
     private final Pose scorePose2_ControlPoint = poseFactory.of(28, -109, 0);
     private final Pose scorePose2_ControlPoint2 = poseFactory.of(17, -44, 0);
-    private final Pose scorePose2 = poseFactory.of(46, -16, 270);
+    private final Pose scorePose2 = poseFactory.of(44, -20, 270);
 
     private final Pose Flower1_Turn = poseFactory.of(48, -22, 90);
     private final Pose Flower1_Keep = poseFactory.of(48, -13, 90);
     private final Pose scorePose3_Backward = poseFactory.of(50, -26, 90);
-    private final Pose scorePose3 = poseFactory.of(46, -14, 270);
+    private final Pose scorePose3 = poseFactory.of(44, -20, 270);
 
     private final Pose Flower2_Turn_ControlPoint = poseFactory.of(17, -44, 0);
     private final Pose Flower2_Turn_ControlPoint2 = poseFactory.of(50, -98, 180);
     private final Pose Flower2_Turn = poseFactory.of(30, -94, 180);
     private final Pose Flower2_Keep = poseFactory.of(14, -94, 180);
 
-    private final Pose scorePose4 = poseFactory.of(46, -16, 270);
-//    private final Pose Park_ControlPoint = poseFactory.of(17, -114, 0);
-//    private final Pose Park_ControlPoint2 = poseFactory.of(9, -73, 0);
-    private final Pose Park = poseFactory.of(12, -20, 270);
+//    private final Pose scorePose4 = poseFactory.of(44, -20, 270);
+//    private final Pose Park = poseFactory.of(12, -20, 270);
+    private final Pose scorePose4 = poseFactory.of(44, -124, 90);
+    private final Pose Park_ControlPoint = poseFactory.of(17, -114, 0);
+    private final Pose Park_ControlPoint2 = poseFactory.of(9, -73, 0);
+    private final Pose Park = poseFactory.of(134, -94, 90);
 
     // Path methods
     private Path startToScore() {return line(startPose, scorePose).linear(startPose, scorePose);}
@@ -90,8 +92,8 @@ public class Auto_Garden_Red extends OpMode {
     private Path ScoreToFlower2_Turn(){return Paths.curve(scorePose3, Flower2_Turn_ControlPoint, Flower2_Turn_ControlPoint2, Flower2_Turn).linear(scorePose3,Flower2_Turn);}
     private Path ScoreToFlower2_Keep() {return Paths.line(Flower2_Turn, Flower2_Keep).linear(Flower2_Turn, Flower2_Keep);}
     private Path Flower2ToScore() {return Paths.line(Flower2_Keep,scorePose4).linear(Flower2_Keep,scorePose4);}
-    private Path ScoreTo_Park(){return Paths.line(scorePose4,Park).linear(scorePose4,Park);}
-//    private Path ScoreTo_Park(){return Paths.curve(scorePose4, Park_ControlPoint, Park_ControlPoint2, Park).linear(scorePose4,Park);}
+//    private Path ScoreTo_Park(){return Paths.line(scorePose4,Park).linear(scorePose4,Park);}
+    private Path ScoreTo_Park(){return Paths.curve(scorePose4, Park_ControlPoint, Park_ControlPoint2, Park).linear(scorePose4,Park);}
 
 
 
