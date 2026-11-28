@@ -33,7 +33,7 @@ import org.firstinspires.ftc.teamcode.Opmode.System.TelemetryX;
 import org.firstinspires.ftc.teamcode.pedro.Constants;
 
 @Autonomous
-public class Auto_Garden_Blue_Allies extends OpMode {
+public class Auto_Human_Blue_Allies extends OpMode {
     Follower follower;
     PoseFactory poseFactory = PoseFactory.degrees();
 
@@ -159,7 +159,7 @@ public class Auto_Garden_Blue_Allies extends OpMode {
     public void loop() {
         dis = distance.Pythagoras(follower.pose().x(),follower.pose().y(),follower.pose().heading(),Goal,check_Turret_Red,offset,offset);
 
-        FSM_shooter_pollen.update_state();
+        FSM_shooter_pollen.update_state(dis);
 //        FSM_shooter_nectar.update_state();
         FSM_intake.update_state(0);
         FSM_closer_pollen.update_state();

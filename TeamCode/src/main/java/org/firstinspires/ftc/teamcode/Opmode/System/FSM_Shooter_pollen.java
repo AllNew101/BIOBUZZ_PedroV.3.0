@@ -3,20 +3,20 @@ package org.firstinspires.ftc.teamcode.Opmode.System;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.VoltageSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.Opmode.Config_Tuning;
 
 public class FSM_Shooter_pollen {
-    public void init(HardwareMap hardwareMap) {
-    }
 
-    public enum Current_State{Far,Mid,Stop}
+    public enum Current_State{Mid,Stop}
 
     PID_Shooter PID;
     Current_State current_state;
     DcMotorEx shooter2;
     ElapsedTime time;
+    VoltageSensor battery;
 
     double stop = 0; // target3
     double power_pid_pollen , power_pid_nectar; // power_shooter
@@ -25,11 +25,13 @@ public class FSM_Shooter_pollen {
     public void init (HardwareMap hardwareMap, ElapsedTime elapsedTime){
         shooter2 = hardwareMap.get(DcMotorEx.class,"Shooter2"); // pollen
         shooter2.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        battery = hardwareMap.voltageSensor.iterator().next();
 
         time = elapsedTime;
         PID = new PID_Shooter();
         PID.init(time);
     }
+    public void start_teleop() {Config_Tuning.FSM_Shooter.mid_pollen = 1030;}
 
     public double[] get_info_shooter(){double[] info = {shooter2.getVelocity(),target_velo_pollen}; return info;}
     public Current_State get_state(){return current_state;}
@@ -38,21 +40,13 @@ public class FSM_Shooter_pollen {
         current_state = change_state;
     }
 
-    public void update_state (){
-        double test_power = Config_Tuning.FSM_Shooter.power;
+    public void update_state (double[] Dis){
         double mid_pollen = Config_Tuning.FSM_Shooter.mid_pollen; //target1
-        double mid_nectar = Config_Tuning.FSM_Shooter.mid_nectar; // target2
         switch (current_state){
-            case Far:
-//                target_velo = far;
-//                power_pid = PID.PIDF(far , shooter1.getVelocity());
-//                shooter1.setPower(power_pid);
-//                shooter2.setPower(power_pid);
-                break;
             case Mid:
                 target_velo_pollen = mid_pollen;
                 //// POLLEN ////
-                power_pid_pollen = PID.PIDF_Pollen(mid_pollen , shooter2.getVelocity());
+                power_pid_pollen = PID.PIDF_Pollen(mid_pollen , shooter2.getVelocity(),battery.getVoltage());
                 shooter2.setPower(power_pid_pollen);
 
                 break;

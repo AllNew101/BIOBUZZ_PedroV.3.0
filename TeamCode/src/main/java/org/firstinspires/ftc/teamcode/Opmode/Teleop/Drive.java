@@ -77,14 +77,14 @@ public class Drive extends OpMode {
     boolean check_triggerR = true;
     boolean check_closer_pollen = false;
     boolean check_bumperR = true;
-    boolean check_shoot_pollen = true;
+    boolean check_shooter_pollen = false;
     boolean check_triangle2 = true;
-    boolean check_shoot_nectar = true;
+    boolean check_shooter_nectar = false;
     boolean check_dpadL2 = true;
     boolean check_dpadR2 = true;
     int state_turret_manual = 2;
     boolean check_square = true;
-    boolean check_turret = true;
+    boolean check_turret = false;
     boolean check_bumperR2 = true;
     boolean check_bumperL2 = true;
     boolean check_triggerR2 = true;
@@ -157,6 +157,7 @@ public class Drive extends OpMode {
     public void start() {
         FSM_shooter_pollen.command(FSM_Shooter_pollen.Current_State.Stop);
         FSM_shooter_nectar.command(FSM_Shooter_nectar.Current_State.Stop);
+        FSM_shooter_pollen.start_teleop();
         switch (Auto_End_Pose.Start_Pose) {
             case Default:
                 follower.setPose(Auto_End_Pose.Default_Start);
@@ -165,18 +166,30 @@ public class Drive extends OpMode {
             case End_Red:
                 follower.setPose(Auto_End_Pose.End_Auto_Red);
                 check_Turret_Red = true;
+                check_shooter_pollen = true;
+                check_shooter_nectar = true;
+                check_turret = true;
                 break;
             case End_Red_Allies:
                 follower.setPose(Auto_End_Pose.End_Auto_Red_Allies);
                 check_Turret_Red = true;
+                check_shooter_pollen = true;
+                check_shooter_nectar = true;
+                check_turret = true;
                 break;
             case End_Blue:
                 follower.setPose(Auto_End_Pose.End_Auto_Blue);
                 check_Turret_Red = false;
+                check_shooter_pollen = true;
+                check_shooter_nectar = true;
+                check_turret = true;
                 break;
             case End_Blue_Allies:
                 follower.setPose(Auto_End_Pose.End_Auto_Blue_Allies);
                 check_Turret_Red = false;
+                check_shooter_pollen = true;
+                check_shooter_nectar = true;
+                check_turret = true;
                 break;
         }
         follower.update();
@@ -213,7 +226,8 @@ public class Drive extends OpMode {
             else {
                 Locking = hold(follower, new Pose(follower.pose().x(),follower.pose().y(),follower.pose().heading() + Math.toRadians(dis[3] - offset_lock_garden)));}
             Scheduler.schedule(Locking);
-            if (follower.pose().heading() + Math.toRadians(-2) <= follower.pose().heading() + Math.toRadians(dis[3] - offset_lock_garden) && follower.pose().heading() + Math.toRadians(2) >= follower.pose().heading() + Math.toRadians(dis[3] - offset_lock_garden)) {
+            if ((follower.pose().heading() + Math.toRadians(-2) <= follower.pose().heading() + Math.toRadians(dis[3] - offset_lock_garden) && follower.pose().heading() + Math.toRadians(2) >= follower.pose().heading() + Math.toRadians(dis[3] - offset_lock_garden) )
+                || (follower.pose().heading() + Math.toRadians(-2) <= follower.pose().heading() + Math.toRadians(dis[3] - offset_lock_human) && follower.pose().heading() + Math.toRadians(2) >= follower.pose().heading() + Math.toRadians(dis[3] - offset_lock_human) ) ) {
                 if (check_delay_lock){
                     Delay_Macro = time.milliseconds() - previous_time_delay;
                     if (Delay_Macro >= 250){
@@ -292,22 +306,22 @@ public class Drive extends OpMode {
         // PID_SHOOTER
         // POLLEN
         if (gamepad1.rightBumperWasPressed() && check_bumperR){
-            check_shoot_pollen = !check_shoot_pollen;
+            check_shooter_pollen = !check_shooter_pollen;
             check_bumperR = false;
         } else if (!gamepad1.rightBumperWasPressed()) {
             check_bumperR = true;}
-        if (check_shoot_pollen){
+        if (check_shooter_pollen){
             FSM_shooter_pollen.command(FSM_Shooter_pollen.Current_State.Mid);}
         else {
             FSM_shooter_pollen.command(FSM_Shooter_pollen.Current_State.Stop);
         }
         // NECTAR
         if (gamepad2.triangleWasPressed() && check_triangle2){
-            check_shoot_nectar = !check_shoot_nectar;
+            check_shooter_nectar = !check_shooter_nectar;
             check_triangle2 = false;
         } else if (!gamepad2.triangleWasPressed()) {
             check_triangle2 = true;}
-        if (check_shoot_nectar){
+        if (check_shooter_nectar){
             FSM_shooter_nectar.command(FSM_Shooter_nectar.Current_State.Mid);}
         else {
             FSM_shooter_nectar.command(FSM_Shooter_nectar.Current_State.Stop);}
@@ -317,29 +331,29 @@ public class Drive extends OpMode {
             Config_Tuning.FSM_Shooter.mid_pollen += 5;
             check_bumperR2 = false;}
         else if(!gamepad2.right_bumper) {
-            check_bumperR2=true;}
+            check_bumperR2 = true;}
         if (gamepad2.left_bumper&&check_bumperL2){
             Config_Tuning.FSM_Shooter.mid_nectar += 10;
             check_bumperL2 = false;}
         else if(!gamepad2.left_bumper)  {
-            check_bumperL2=true;}
+            check_bumperL2 = true;}
         if (gamepad2.right_trigger > 0 && check_triggerR2) {
             Config_Tuning.FSM_Shooter.mid_pollen -= 5;
             check_triggerR2 = false;}
         else if(gamepad2.right_trigger <= 0 ) {
-            check_triggerR2=true;}
+            check_triggerR2 = true;}
         if (gamepad2.left_trigger > 0 && check_triggerL2) {
             Config_Tuning.FSM_Shooter.mid_nectar -= 10;
             check_triggerL2 = false;}
         else if(gamepad2.left_trigger <= 0) {
-            check_triggerL2=true;}
+            check_triggerL2 = true;}
 
         //Flower
-        if (gamepad2.squareWasPressed() && check_DpadDOWN) {
-            check_DpadDOWN = false;
+        if (gamepad2.squareWasPressed() && check_square2) {
+            check_square2 = false;
             check_flower = !check_flower;}
         else if (!gamepad2.squareWasPressed()) {
-            check_DpadDOWN = true;}
+            check_square2 = true;}
         if (check_flower){
             flower2.setPosition(1);
         } else {
@@ -382,7 +396,7 @@ public class Drive extends OpMode {
         } else if (!gamepad2.ps){check_ps2 = true;}
 
         debugging();
-        FSM_shooter_pollen.update_state();
+        FSM_shooter_pollen.update_state(dis);
         FSM_shooter_nectar.update_state();
         FSM_intake.update_state(offset_intake);
         FSM_closer_pollen.update_state();
@@ -400,28 +414,27 @@ public class Drive extends OpMode {
     public void debugging (){
         switch (debug_key){
             case 0 :
-                telemetryX.addData("PID_Shooter",true, TelemetryX.Target.BOTH);
                 telemetryX.addData("Velocity_pollen",FSM_shooter_pollen.get_info_shooter()[0], TelemetryX.Target.BOTH);
                 telemetryX.addData("Velocity_nectar",FSM_shooter_nectar.get_info_shooter()[0], TelemetryX.Target.BOTH);
                 telemetryX.addData("Target_Pollen",FSM_shooter_pollen.get_info_shooter()[1], TelemetryX.Target.BOTH);
                 telemetryX.addData("Target_Nectar",FSM_shooter_nectar.get_info_shooter()[1], TelemetryX.Target.BOTH);
                 telemetryX.addData("Current_State_Closer",FSM_closer_pollen.get_state(),TelemetryX.Target.BOTH);
                 telemetryX.addData("theta_target",(dis[1]),TelemetryX.Target.BOTH);
+                telemetryX.addData("distance_target",(dis[0]),TelemetryX.Target.BOTH);
                 telemetryX.addData("X",follower.pose().x(),TelemetryX.Target.BOTH);
                 telemetryX.addData("Y",follower.pose().y(),TelemetryX.Target.BOTH);
                 telemetryX.addData("Heading_robot",Math.toDegrees(follower.pose().heading()),TelemetryX.Target.BOTH);
                 telemetryX.addData("offset_human",offset_human,TelemetryX.Target.BOTH);
                 telemetryX.addData("offset_garden",offset_garden,TelemetryX.Target.BOTH);
-                telemetryX.addData("TX",limelight.get_x(),TelemetryX.Target.BOTH);
-                telemetryX.addData("TY",limelight.get_y(distance.pythagoras_limelight(follower.pose().x(),follower.pose().y(),follower.pose().heading())),TelemetryX.Target.BOTH);
                 telemetryX.addData("Intake_shoot",offset_intake + Config_Tuning.Intake.Intake_Shoot, TelemetryX.Target.BOTH);
                 telemetryX.addData("Check-Red",check_Turret_Red, TelemetryX.Target.BOTH);
-                telemetryX.addData("offset_lock_garden",offset_lock_garden, TelemetryX.Target.BOTH);
-                telemetryX.addData("offset_lock_human",offset_lock_human, TelemetryX.Target.BOTH);
-                telemetryX.addData("Start_pose", Auto_End_Pose.Start_Pose, TelemetryX.Target.BOTH);
         }
     }
 }
+
+//                telemetryX.addData("Start_pose", Auto_End_Pose.Start_Pose, TelemetryX.Target.BOTH);
+//                telemetryX.addData("offset_lock_garden",offset_lock_garden, TelemetryX.Target.BOTH);
+//                telemetryX.addData("offset_lock_human",offset_lock_human, TelemetryX.Target.BOTH);
 
 //    Follower follower;
 

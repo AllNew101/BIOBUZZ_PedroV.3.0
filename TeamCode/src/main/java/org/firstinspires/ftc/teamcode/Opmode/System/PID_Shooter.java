@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.Opmode.System;
 
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.VoltageSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.Opmode.Config_Tuning;
@@ -16,7 +17,7 @@ public class PID_Shooter {
         previous_time = time.seconds();
         previous_error = 0;
     }
-    public double PIDF_Pollen (double target_velo , double current_velo){
+    public double PIDF_Pollen (double target_velo , double current_velo , double battery_V){
         double kp = Config_Tuning.Shooter_Pollen.kp;
         double ki = Config_Tuning.Shooter_Pollen.ki ;
         double kd = Config_Tuning.Shooter_Pollen.kd ;
@@ -30,7 +31,7 @@ public class PID_Shooter {
         power_motor = (kp*error) + (ki*integral_pollen) + (kd*(delta_error/delta_time)) + (kf * target_velo);
         previous_time = time.seconds();
         previous_error = error;
-        return power_motor;
+        return power_motor * (12.6/battery_V);
     }
     public double PIDF_Nectar (double target_velo , double current_velo){
         double kp = Config_Tuning.Shooter_Nectar.kp;
